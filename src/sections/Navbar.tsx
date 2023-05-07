@@ -20,10 +20,10 @@ const Navbar = () => {
   return (
     <>
       <div className="flex sticky top-0 w-full justify-between bg-secondary p-6 nav">
-        <div className="text-[var(--tsemilarge)] fira-code">
-          <Link href={'/'} className="fira-code text-[var(--tsemilarge)]">DevTools</Link>
+        <div>
+          <Link href={'/'} className="fira-code text-[var(--tlarge)]">DevTools</Link>
         </div>
-        <div className="flex mr-10">
+        <div className="flex mr-10 text-[12px]">
 
           {
             session ? (
