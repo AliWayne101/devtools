@@ -1,5 +1,6 @@
 import Hero from '@/sections/Hero'
 import Navbar from '@/sections/Navbar'
+import Setup from '@/sections/Setup'
 import React from 'react'
 
 const Index = () => {
@@ -8,7 +9,7 @@ const Index = () => {
       <Navbar />
       <main>
         <Hero />
-        <div>Just a test</div>
+        <Setup />
 
       </main>
     </>

@@ -1,0 +1,12 @@
+.setup {
+    &-entries {
+        &-icon {
+            background-color: var(--theme-secondary);
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
