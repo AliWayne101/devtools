@@ -1,5 +1,9 @@
 .hero {
   font-family: var(--inter);
+  &-sect {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
   &-main {
     font-size: var(--tlarge);
     color: var(--light-slate);
@@ -7,48 +11,20 @@
   &-sub {
     font-size: var(--tbody);
     font-family: var(--fira-code);
-    margin: 20px 650px;
     color: var(--slate);
   }
   &-semi {
     font-size: var(--tsemilarge);
     color: var(--light-slate);
-    margin: 0 700px;
-  }
-
-  @media screen and (max-width: 1600px) {
-    &-sub {
-      margin: 20px 450px;
-    }
-    &-semi {
-      margin: 0 450px;
-    }
-  }
-
-  @media screen and (max-width: 1200px) {
-    &-sub {
-      margin: 20px 300px;
-    }
-    &-semi {
-      margin: 0 280px;
-    }
   }
 
   @media screen and (max-width: 960px) {
-    &-sub {
-      margin: 20px 100px;
+    &-image {
+      display: none;
     }
-    &-semi {
-      margin: 0 90px;
-    }
-  }
-
-  @media screen and (max-width: 480px) {
-    &-sub {
-      margin: 20px 20px;
-    }
-    &-semi {
-      margin: 0 10px;
+    &-sect {
+      display: flex;
     }
   }
+  
 }

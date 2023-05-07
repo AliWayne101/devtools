@@ -3,17 +3,17 @@ import Image from 'next/image';
 
 const Hero = () => {
     return (
-        <div className="w-full grid grid-cols-2">
-            <div className="pt-20">
-                <div className="hero-main">
+        <div className="w-full hero-sect">
+            <div className="w-full mt-20">
+                <span className="hero-main">
                     Rev up your <b>growth</b> <br />
                     with <b>Skyrocket Conversion</b>
-                </div>
-                <p className='hero-sub'>
+                </span>
+                <p className='hero-sub pt-4'>
                     Supercharge your website&apos;s growth with out attention-grabbing <b>Notification Widgets</b>
                 </p>
             </div>
-            <div className="flex">
+            <div className="hero-image">
                 <Image src={'/rocket.png'} alt={'rocket'} width={600} height={600} />
             </div>
         </div>
