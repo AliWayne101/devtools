@@ -45,14 +45,14 @@ const Navbar = () => {
                             <Menu.Item key={index}>
                               <div className="flex cursor-pointer text-[var(--slate)] block px-4 py-2" onClick={() => signOut()}>
                                 <FaSignOutAlt size={16} />
-                                <span className="pl-2">Sign out</span>
+                                <span className="pl-2 fira-code">Sign out</span>
                               </div>
                             </Menu.Item>
                           ) : (
                             <Menu.Item key={index}>
                               <Link href={data.link} className="flex text-[var(--slate)] block px-4 py-2 hover:text-[var(--light-slate)]">
                                 {data.ico}
-                                <span className="pl-2">{data.name}</span>
+                                <span className="pl-2 fira-code">{data.name}</span>
                               </Link>
                             </Menu.Item>
                           )
