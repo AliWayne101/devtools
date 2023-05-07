@@ -21,8 +21,8 @@ const Setup = () => {
                             </IconContext.Provider>
                         </div>
                         <div className="w-[70%] ml-3">
-                            <span className='text-[var(--light-slate)] text-base'>{data.title}</span><br />
-                            <span className='text-[var(--slate)] text-sm'>{data.desc}</span>
+                            <span className='text-[var(--light-slate)] text-base font-inter'>{data.title}</span><br />
+                            <span className='text-[var(--slate)] text-sm font-fira'>{data.desc}</span>
                         </div>
                     </div>
                 ))
