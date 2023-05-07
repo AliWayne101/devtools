@@ -9,4 +9,9 @@
             align-items: center;
         }
     }
+
+    @media screen and (max-width: 480px) {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
 }

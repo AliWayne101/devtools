@@ -11,10 +11,10 @@ const Setup = () => {
     ];
 
     return (
-        <div className="setup w-full grid grid-cols-3 gap-2 mt-20">
+        <div className="w-full grid grid-cols-3 gap-2 mt-20 setup">
             {
                 iconDetails.map((data, index) => (
-                    <div className="flex setup-entries" key={index}>
+                    <div className="flex setup-entries mt-3" key={index}>
                         <div className="flex setup-entries-icon">
                             <IconContext.Provider value={{ className: "icons" }}>
                                 {data.icon}
