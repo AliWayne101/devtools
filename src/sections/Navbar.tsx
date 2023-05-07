@@ -13,7 +13,6 @@ const Navbar = () => {
     { name: "Dashboard", link: "/profile", ico: <RiDashboardFill size={16} /> },
     { name: "Campaigns", link: "/campaigns", ico: <CgDatabase size={16} /> },
     { name: "Account", link: "/account", ico: <FaWrench size={16} /> },
-    { name: "API", link: "/api", ico: <FaCode size={16} /> },
     { name: "Logout", link: "/logout", ico: "null" },
   ];
 
@@ -21,7 +20,7 @@ const Navbar = () => {
     <>
       <div className="flex sticky top-0 w-full justify-between bg-secondary p-6 nav">
         <div>
-          <Link href={'/'} className="fira-code text-[var(--tlarge)]">DevTools</Link>
+          <Link href={'/'} className="fira-code">DevTools</Link>
         </div>
         <div className="flex mr-10 text-[12px]">
 
