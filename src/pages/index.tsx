@@ -13,9 +13,6 @@ const Index = () => {
         <Setup />
       </main>
       <Integration />
-      <main>
-        Another Body
-      </main>
     </>
 
   )

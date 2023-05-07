@@ -1,12 +1,19 @@
 .integration {
-    color: var(--slate);
-    font-size: var(--tbody);
-    &-image {
-        width: 200px;
-        margin-right: 40px;
-        transition: 0.3s ease-in-out;
-        &:hover {
-            transform: scale(1.1);
-        }
+  color: var(--slate);
+  font-size: var(--tbody);
+  &-imgcont {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 40px;
+    @media screen and (max-width: 480px) {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
+  }
+  &-image {
+    width: 200px !important;
+    transition: 0.3s ease-in-out;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 }

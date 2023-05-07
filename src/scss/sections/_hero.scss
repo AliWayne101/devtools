@@ -13,10 +13,6 @@
     font-family: var(--fira-code);
     color: var(--slate);
   }
-  &-semi {
-    font-size: var(--tsemilarge);
-    color: var(--light-slate);
-  }
 
   @media screen and (max-width: 960px) {
     &-image {
