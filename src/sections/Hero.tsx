@@ -10,7 +10,7 @@ const Hero = () => {
                     with <b>Skyrocket Conversion</b>
                 </div>
                 <p className='hero-sub'>
-                    Supercharge your website's growth with out attention-grabbing <b>Notification Widgets</b>
+                    Supercharge your website&apos;s growth with out attention-grabbing <b>Notification Widgets</b>
                 </p>
             </div>
             <div className="flex">
