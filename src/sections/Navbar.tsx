@@ -18,7 +18,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex sticky top-0 w-full justify-between bg-prmary p-6 nav">
+      <div className="flex w-full justify-between bg-prmary p-6 nav">
         <div>
           <Link href={'/'} className="fira-code">DevTools</Link>
         </div>
