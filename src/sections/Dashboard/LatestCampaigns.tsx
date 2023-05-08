@@ -1,4 +1,5 @@
 import Button from '@/components/Button'
+import Toggle from '@/components/Toggle'
 import React from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 
@@ -9,7 +10,7 @@ const LatestCampaigns = () => {
                 <div className="inter subTitle text-[var(--slate)]">
                     Latest Campaigns
                 </div>
-                <span><Button name={'Add Campains'} href={'null'} /></span>
+                <span><Button name={'Add Campaigns'} href={'null'} /></span>
             </div>
             <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
                 <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--light-slate)]">
@@ -34,7 +35,7 @@ const LatestCampaigns = () => {
                     <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                 </div>
                 <div className="w-full grid grid-cols-3 sm:grid-cols-5 fira-code text-[var(--slate)]">
-                    
+
                 </div>
             </div>
         </div>
