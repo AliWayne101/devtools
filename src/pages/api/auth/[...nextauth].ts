@@ -15,11 +15,4 @@ export default NextAuth({
       clientSecret: process.env.NEXT_PUBLIC_GITHUB_SECRET!,
     }),
   ],
-  callbacks: {
-    async signIn({ user: User, account: Account }) {
-        console.log(User);
-        console.log(Account);
-        return '/dashboard';
-    },
-  },
 });
