@@ -7,8 +7,7 @@ import { getSession, useSession } from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 import { Session } from 'next-auth'
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
-import { ParsedUrlQuery } from 'querystring'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
 
 interface returnProps {
@@ -160,11 +159,9 @@ const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
     )
 }
 
-export default LatestCampaigns;
-
 export const getServerSideProps: GetServerSideProps<returnProps> = async (
-    context: GetServerSidePropsContext<ParsedUrlQuery>
-): Promise<GetServerSidePropsResult<returnProps>> => {
+    context: GetServerSidePropsContext
+) => {
 
     const session = await getSession(context);
     const recentDocs: ICampaigns[] = [];
@@ -196,3 +193,5 @@ export const getServerSideProps: GetServerSideProps<returnProps> = async (
         },
     }
 }
+
+export default LatestCampaigns
