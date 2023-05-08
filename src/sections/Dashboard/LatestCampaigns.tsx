@@ -180,7 +180,7 @@ export const getServerSideProps: GetServerSideProps<returnProps> = async (
     //     });
 
 
-    if (!session) {
+    if (!session || session === null) {
         return {
             redirect: {
                 destination: '/',
