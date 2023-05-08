@@ -10,7 +10,7 @@ const Dashboard = () => {
         <Navbar />
         <Details />
         <main>
-          <LatestCampaigns />
+          <LatestCampaigns session={null} recentDocs={[]} />
           <Footer />
         </main>
     </>
