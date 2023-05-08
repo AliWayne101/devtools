@@ -17,6 +17,8 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn({ user: User, account: Account }) {
+        console.log(User);
+        console.log(Account);
         return '/dashboard';
     },
   },
