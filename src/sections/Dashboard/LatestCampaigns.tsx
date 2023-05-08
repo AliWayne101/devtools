@@ -13,10 +13,10 @@ import { ParsedUrlQuery } from 'querystring'
 
 interface returnProps {
     session: Session | null,
-    recentDocs: ICampaigns[] | []
+    recentDocs: ICampaigns[]
 }
 
-const LatestCampaigns = ({session, recentDocs}: returnProps) => {
+const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
@@ -173,10 +173,9 @@ export const getServerSideProps: GetServerSideProps<returnProps> = async (
 ): Promise<GetServerSidePropsResult<returnProps>> => {
 
     const session = await getSession(context);
+    const recentDocs: ICampaigns[] = [];
 
-
-    if (!session && session !== null) {
-        // campModel
+    // campModel
         //     .find({ User: session.user.email })
         //     .exec()
         //     .then((docs) => {
@@ -185,18 +184,21 @@ export const getServerSideProps: GetServerSideProps<returnProps> = async (
         //     .catch((e) => {
         //         console.log(e);
         //     });
+        
+
+    if (!session) {
         return {
             redirect: {
                 destination: '/',
-                permanent: false
-            }
+                permanent: false,
+            },
         }
     }
 
     return {
         props: {
             session,
-            recentDocs: [],
-        }
+            recentDocs,
+        },
     }
 }
