@@ -1,7 +1,7 @@
-import mongoose, { Model, Schema, model } from "mongoose";
+import { Document, Model, Schema, model, Types } from "mongoose";
 
 export interface ICampaigns {
-  _id: mongoose.Types.ObjectId;
+  _id: Types.ObjectId;
   Name: string;
   URL: string;
   Tstamp: Date;
@@ -10,7 +10,7 @@ export interface ICampaigns {
 }
 
 const Campaigns = new Schema({
-  _id: mongoose.Types.ObjectId,
+  _id: Types.ObjectId,
   Name: String,
   URL: String,
   Tstamp: {

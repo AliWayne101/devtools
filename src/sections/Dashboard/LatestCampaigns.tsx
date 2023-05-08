@@ -3,11 +3,20 @@ import Toggle from '@/components/Toggle'
 import React, { useEffect, useState } from 'react'
 import { FaSignature } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import campModel, { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
+import { Session } from 'next-auth'
+import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+import { ParsedUrlQuery } from 'querystring'
 
-const LatestCampaigns = () => {
+
+interface returnProps {
+    session: Session | null,
+    recentDocs: ICampaigns[] | []
+}
+
+const LatestCampaigns = ({session, recentDocs}: returnProps) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
@@ -16,7 +25,7 @@ const LatestCampaigns = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
 
-    const { data: session } = useSession();
+    const { data: _session } = useSession();
     console.log(session);
     const AddWebsite = () => {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
@@ -36,20 +45,12 @@ const LatestCampaigns = () => {
 
     useEffect(() => {
         if (session && session.user) {
-            campModel
-                .find({ User: session.user.email })
-                .exec()
-                .then((docs) => {
-                    setRecentCampaigns(docs);
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
+
         }
     }, [session?.user?.name])
 
-    const changeStatus = async(status: boolean, _URL: string) => {
-        const newState = status === true ? false: true;
+    const changeStatus = async (status: boolean, _URL: string) => {
+        const newState = status === true ? false : true;
         const newDocs: ICampaigns[] = [];
         recentCampaigns.map((doc) => {
             if (doc.URL !== _URL) {
@@ -61,14 +62,15 @@ const LatestCampaigns = () => {
                     URL: doc.URL,
                     Tstamp: doc.Tstamp,
                     isActive: newState,
-                    User: doc.User
+                    User: doc.User,
                 }
                 newDocs.push(mockDoc);
             }
         });
         setRecentCampaigns(newDocs);
-        
-        const updated = await campModel.findOneAndUpdate({ URL: _URL }, {isActive: newState});
+
+        //write axios code to send request
+        const updated = await campModel.findOneAndUpdate({ URL: _URL }, { isActive: newState });
         console.log(updated);
     }
 
@@ -164,4 +166,37 @@ const LatestCampaigns = () => {
     )
 }
 
-export default LatestCampaigns
+export default LatestCampaigns;
+
+export const getServerSideProps: GetServerSideProps<returnProps> = async (
+    context: GetServerSidePropsContext<ParsedUrlQuery>
+): Promise<GetServerSidePropsResult<returnProps>> => {
+
+    const session = await getSession(context);
+
+
+    if (!session && session !== null) {
+        // campModel
+        //     .find({ User: session.user.email })
+        //     .exec()
+        //     .then((docs) => {
+        //         setRecentCampaigns(docs);
+        //     })
+        //     .catch((e) => {
+        //         console.log(e);
+        //     });
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {
+            session,
+            recentDocs: [],
+        }
+    }
+}
