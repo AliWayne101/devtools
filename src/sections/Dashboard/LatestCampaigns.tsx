@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { FaSignature } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
 import { getSession, useSession } from 'next-auth/react'
-import campModel, { ICampaigns } from '@/schemas/campaignInfo'
+import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 import { Session } from 'next-auth'
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
@@ -43,12 +43,6 @@ const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
         })
     }
 
-    useEffect(() => {
-        if (session && session.user) {
-
-        }
-    }, [session?.user?.name])
-
     const changeStatus = async (status: boolean, _URL: string) => {
         const newState = status === true ? false : true;
         const newDocs: ICampaigns[] = [];
@@ -70,8 +64,8 @@ const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
         setRecentCampaigns(newDocs);
 
         //write axios code to send request
-        const updated = await campModel.findOneAndUpdate({ URL: _URL }, { isActive: newState });
-        console.log(updated);
+        // const updated = await campModel.findOneAndUpdate({ URL: _URL }, { isActive: newState });
+        // console.log(updated);
     }
 
     return (
@@ -176,15 +170,15 @@ export const getServerSideProps: GetServerSideProps<returnProps> = async (
     const recentDocs: ICampaigns[] = [];
 
     // campModel
-        //     .find({ User: session.user.email })
-        //     .exec()
-        //     .then((docs) => {
-        //         setRecentCampaigns(docs);
-        //     })
-        //     .catch((e) => {
-        //         console.log(e);
-        //     });
-        
+    //     .find({ User: session.user.email })
+    //     .exec()
+    //     .then((docs) => {
+    //         setRecentCampaigns(docs);
+    //     })
+    //     .catch((e) => {
+    //         console.log(e);
+    //     });
+
 
     if (!session) {
         return {
