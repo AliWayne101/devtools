@@ -5,7 +5,8 @@ export interface ICampaigns {
   Name: string;
   URL: string;
   Tstamp: Date;
-  User: String;
+  User: string;
+  isActive: boolean;
 }
 
 const Campaigns = new Schema({
@@ -17,6 +18,7 @@ const Campaigns = new Schema({
     default: Date.now,
   },
   User: String,
+  isActive: Boolean,
 });
 
 let campModel: Model<ICampaigns>;

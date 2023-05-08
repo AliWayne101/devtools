@@ -1,9 +1,11 @@
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaSignature } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
 import { useSession } from 'next-auth/react'
+import campModel, { ICampaigns } from '@/schemas/campaignInfo'
+import Link from 'next/link'
 
 const LatestCampaigns = () => {
     const [writeCampaign, setWriteCampaign] = useState(false);
@@ -12,6 +14,7 @@ const LatestCampaigns = () => {
         URL: "",
     });
     const [errorMsg, setErrorMsg] = useState('');
+    const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
 
     const { data: session } = useSession();
     console.log(session);
@@ -29,6 +32,44 @@ const LatestCampaigns = () => {
         setAddWebDetails({
             ...addWebDetails, [e.name]: e.value
         })
+    }
+
+    useEffect(() => {
+        if (session && session.user) {
+            campModel
+                .find({ User: session.user.email })
+                .exec()
+                .then((docs) => {
+                    setRecentCampaigns(docs);
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        }
+    }, [session?.user?.name])
+
+    const changeStatus = async(status: boolean, _URL: string) => {
+        const newState = status === true ? false: true;
+        const newDocs: ICampaigns[] = [];
+        recentCampaigns.map((doc) => {
+            if (doc.URL !== _URL) {
+                newDocs.push(doc);
+            } else {
+                const mockDoc: ICampaigns = {
+                    _id: doc._id,
+                    Name: doc.Name,
+                    URL: doc.URL,
+                    Tstamp: doc.Tstamp,
+                    isActive: newState,
+                    User: doc.User
+                }
+                newDocs.push(mockDoc);
+            }
+        });
+        setRecentCampaigns(newDocs);
+        
+        const updated = await campModel.findOneAndUpdate({ URL: _URL }, {isActive: newState});
+        console.log(updated);
     }
 
     return (
@@ -81,9 +122,25 @@ const LatestCampaigns = () => {
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                             </div>
-                            <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
-
-                            </div>
+                            {
+                                recentCampaigns && (
+                                    recentCampaigns.map((data, index) => (
+                                        <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
+                                            <div className='pt-4 pb-4 pl-3 pr-2'>
+                                                <Link href={`/campaign/${encodeURIComponent(data.URL)}`} className='link'>
+                                                    {data.Name}
+                                                </Link>
+                                                <div className="mt-1">{data.URL}</div>
+                                            </div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.Tstamp.toLocaleDateString()}</div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2'>
+                                                Checking..
+                                            </div>
+                                        </div>
+                                    ))
+                                )
+                            }
                         </div>
                     </>
                 )
