@@ -1,28 +1,93 @@
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
-import React from 'react'
-import { AiOutlinePlus } from 'react-icons/ai'
+import React, { useState } from 'react'
+import { FaSignature } from 'react-icons/fa'
+import { BiNetworkChart } from 'react-icons/bi'
+import { useSession } from 'next-auth/react'
 
 const LatestCampaigns = () => {
+    const [writeCampaign, setWriteCampaign] = useState(false);
+    const [addWebDetails, setAddWebDetails] = useState({
+        Name: "",
+        URL: "",
+    });
+    const [errorMsg, setErrorMsg] = useState('');
+
+    const { data: session } = useSession();
+    console.log(session);
+    const AddWebsite = () => {
+        if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
+            if (addWebDetails.URL.includes('.')) {
+
+            } else
+                setErrorMsg('Invalid website address');
+        } else
+            setErrorMsg('Please make sure all the fields are filled.');
+    }
+
+    const handleChange = (e: HTMLInputElement) => {
+        setAddWebDetails({
+            ...addWebDetails, [e.name]: e.value
+        })
+    }
+
     return (
         <div className="w-full mb-20">
-            <div className='flex justify-between'>
-                <div className="inter subTitle text-[var(--slate)]">
-                    Latest Campaigns
-                </div>
-                <span><Button name={'Add Campaigns'} href={'null'} /></span>
+            <div className="mainTitle fira-code text-[var(--light-slate)] mb-5">
+                Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
             </div>
-            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
-                <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--light-slate)]">
-                    <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Created on</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
-                </div>
-                <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
+            {
+                writeCampaign ? (
+                    <>
+                        <div className='flex justify-between'>
+                            <div className="inter subTitle text-[var(--slate)]">
+                                Create a new campaign
+                            </div>
+                            <span onClick={() => setWriteCampaign(false)}><Button name={'Show latest'} href={'null'} /></span>
+                        </div>
+                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-10">
+                            <div className="flex inter text-[var(--slate)]">
+                                <FaSignature size={20} />&nbsp; Name
+                            </div>
+                            <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' />
+                            <div className="flex inter text-[var(--slate)]">
+                                <BiNetworkChart size={20} />&nbsp; Website
+                            </div>
+                            <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' placeholder='ex: domain.com or subdomain.domain.com' />
+                            <p className="mt-1 mb-2 pl-4 text-[var(--slate)] fira-code">
+                                Please make sure to specify the domain name of the website where the campaign will run,<br />
+                                as notifications will only work on the domain you define.
+                            </p>
+                            {errorMsg.length > 0 && (
+                                <p className="text-red-300 mb-2">{errorMsg}</p>
+                            )}
+                            <span onClick={AddWebsite} className='mt-1'>
+                                <Button name="Create" href='none' />
+                            </span>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className='flex justify-between'>
+                            <div className="inter subTitle text-[var(--slate)]">
+                                Latest Campaigns
+                            </div>
+                            <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
+                        </div>
+                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
+                            <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--light-slate)]">
+                                <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Created on</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
+                            </div>
+                            <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
 
-                </div>
-            </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            }
             <div className='flex inter subTitle text-[var(--slate)] mt-10'>
                 Latest Notifications
             </div>
