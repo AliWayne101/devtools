@@ -46,14 +46,15 @@ main {
 }
 
 .btn {
-  background-color: var(--secondary) !important;
-  padding: 10px;
+  background-color: var(--theme-color);
+  padding: 12px 40px;
   color: var(--light-slate);
   font-family: var(--fira-code);
   transition: 0.3s ease-in-out;
+  font-size: 12px;
+  border-radius: 5px;
   &:hover {
-    transform: scale(0.9);
-    border-radius: 10px;
+    background-color: var(--theme-secondary);
   }
 }
 
@@ -89,4 +90,12 @@ main {
   &:focus {
     outline: none;
   }
+}
+
+.mainTitle {
+  font-size: var(--tmedfull);
+}
+
+.subTitle {
+  font-size: var(--tmed);
 }

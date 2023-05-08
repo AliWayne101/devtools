@@ -10,7 +10,7 @@ const Navbar = () => {
   const { data: session } = useSession();
 
   const navLinks = [
-    { name: "Dashboard", link: "/profile", ico: <RiDashboardFill size={16} /> },
+    { name: "Dashboard", link: "/dashboard", ico: <RiDashboardFill size={16} /> },
     { name: "Campaigns", link: "/campaigns", ico: <CgDatabase size={16} /> },
     { name: "Account", link: "/account", ico: <FaWrench size={16} /> },
     { name: "Logout", link: "/logout", ico: "null" },
@@ -18,7 +18,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex sticky top-0 w-full justify-between bg-secondary p-6 nav">
+      <div className="flex sticky top-0 w-full justify-between bg-prmary p-6 nav">
         <div>
           <Link href={'/'} className="fira-code">DevTools</Link>
         </div>

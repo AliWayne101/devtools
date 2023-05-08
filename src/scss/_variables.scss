@@ -1,13 +1,16 @@
 :root {
     --primary: #131416;
-    --secondary: #151414;
+    --secondary: #191a2c;
+    --secondary2: #1a1a1a;
     --theme-color: rgba(153, 42, 218, 0.986);
-    --theme-secondary: rgba(32, 6, 48, 0.5);
+    --theme-secondary: rgba(147, 2, 236, 0.5);
     --light-slate: #e7e7e7;
     --slate: #b8b8b8;
     --txlarge: 54px;
     --tlarge: 48px;
     --tsemilarge: 32px;
+    --tmedfull: 26px;
+    --tmed: 22px;
     --tbody: 16px;
 }
 
@@ -17,6 +20,10 @@
 
 .bg-secondary {
     background-color: var(--secondary);
+}
+
+.bg-secondary2 {
+    background-color: var(--secondary2);
 }
 
 .font-fira {
