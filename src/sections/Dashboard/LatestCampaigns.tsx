@@ -29,7 +29,6 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     const [membership, setMembership] = useState<iTier>(Tier.Free);
     const [isCreatingCamp, setIsCreatingCamp] = useState(false);
 
-
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -43,6 +42,8 @@ const LatestCampaigns = ({ userDetails, CampData }: {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
             if (addWebDetails.URL.includes('.')) {
                 setIsCreatingCamp(true);
+                console.log(addWebDetails);
+                console.log(userDetails);
                 axios
                     .get(`/api/getdashboard?action=addcampaign&target=${addWebDetails.URL}&campname=${addWebDetails.Name}&user=${userDetails._sysID}`)
                     .then((response) => {
