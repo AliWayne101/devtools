@@ -158,7 +158,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                             </div>
                             {
-                                CampData.map((data, index) => (
+                                recentCampaigns.map((data, index) => (
                                     <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
                                         <div className='pt-4 pb-4 pl-3 pr-2'>
                                             <Link href={`/campaign/${data.User}`} className='link'>
@@ -166,7 +166,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                             </Link>
                                             <div className="mt-1">{data.URL}</div>
                                         </div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.Tstamp}</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.Tstamp.toLocaleDateString()}</div>
                                         <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
                                         <div className='pt-4 pb-4 pl-2 pr-2'>
                                             Checking..
