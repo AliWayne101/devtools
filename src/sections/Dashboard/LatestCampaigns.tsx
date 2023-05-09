@@ -11,11 +11,10 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
 
 interface returnProps {
-    session: Session | null,
-    recentDocs: ICampaigns[]
+    session: any
 }
 
-const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
+const LatestCampaigns = ({ session }: returnProps) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
@@ -159,13 +158,13 @@ const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
     )
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const session = await getSession(context);
-    const recentDocs: ICampaigns[] = [];
 
+export const getServerSideProps: GetServerSideProps<returnProps> = async(context: GetServerSidePropsContext) => {
+    const session = await getSession(context);
+    
     if (!session) {
         return {
-            redirects: {
+            redirect: {
                 destination: "/",
                 permanent: false
             }
@@ -175,9 +174,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
         props: {
             session,
-            recentDocs,
         }
     }
 }
+
 
 export default LatestCampaigns
