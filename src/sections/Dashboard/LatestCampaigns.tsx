@@ -3,7 +3,7 @@ import Toggle from '@/components/Toggle'
 import React, { useEffect, useState } from 'react'
 import { FaSignature } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
-import { getSession} from 'next-auth/react'
+import { getSession, useSession} from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 import { Session } from 'next-auth'
@@ -14,7 +14,7 @@ interface returnProps {
     session: Session | null
 }
 
-const LatestCampaigns = ({ session }: returnProps) => {
+const LatestCampaigns = () => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
@@ -23,7 +23,7 @@ const LatestCampaigns = ({ session }: returnProps) => {
     const [errorMsg, setErrorMsg] = useState('');
     //const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
 
-    //const { data: _session } = useSession();
+    const { data: session } = useSession();
     console.log(`Session: ${session}`);
     
     
