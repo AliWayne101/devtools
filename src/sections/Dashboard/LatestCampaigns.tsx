@@ -159,30 +159,16 @@ const LatestCampaigns = ({ session, recentDocs }: returnProps) => {
     )
 }
 
-export const getServerSideProps: GetServerSideProps<returnProps> = async (
-    context: GetServerSidePropsContext
-) => {
-
+export async function getServerSideProps(context: GetServerSidePropsContext) {
     const session = await getSession(context);
     const recentDocs: ICampaigns[] = [];
 
-    // campModel
-    //     .find({ User: session.user.email })
-    //     .exec()
-    //     .then((docs) => {
-    //         setRecentCampaigns(docs);
-    //     })
-    //     .catch((e) => {
-    //         console.log(e);
-    //     });
-
-
-    if (!session || session === null) {
+    if (!session) {
         return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
+            redirects: {
+                destination: "/",
+                permanent: false
+            }
         }
     }
 
@@ -190,7 +176,7 @@ export const getServerSideProps: GetServerSideProps<returnProps> = async (
         props: {
             session,
             recentDocs,
-        },
+        }
     }
 }
 
