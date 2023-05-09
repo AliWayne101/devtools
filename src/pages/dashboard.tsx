@@ -7,7 +7,7 @@ import Navbar from '@/sections/Navbar'
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import { Head } from 'next/document';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
 export interface Props {

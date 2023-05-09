@@ -35,7 +35,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
             console.log('Setting membership type');
             console.log(membership);
         }
-    }, [userDetails])
+    }, [userDetails.Membership])
 
 
     const AddWebsite = () => {
