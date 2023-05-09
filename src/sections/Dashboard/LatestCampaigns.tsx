@@ -3,11 +3,11 @@ import Toggle from '@/components/Toggle'
 import React, { useEffect, useState } from 'react'
 import { FaSignature } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
-import { getSession, useSession} from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 
-const LatestCampaigns = () => {
+const LatestCampaigns = ({ sysID }: { sysID: string }) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
@@ -16,10 +16,17 @@ const LatestCampaigns = () => {
     const [errorMsg, setErrorMsg] = useState('');
     //const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
 
+    console.log(sysID);
+
     const { data: session } = useSession();
     console.log(`Session: ${session}`);
-    
-    
+
+    useEffect(() => {
+        console.log('loaded');
+        
+    }, [])
+
+
     const AddWebsite = () => {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
             if (addWebDetails.URL.includes('.')) {

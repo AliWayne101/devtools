@@ -5,10 +5,11 @@ import { CgChevronDown, CgDatabase } from 'react-icons/cg';
 import { RiDashboardFill } from 'react-icons/ri';
 import { Menu, Transition } from '@headlessui/react';
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const { data: session } = useSession();
-
+  
   const navLinks = [
     { name: "Dashboard", link: "/dashboard", ico: <RiDashboardFill size={16} /> },
     { name: "Campaigns", link: "/campaigns", ico: <CgDatabase size={16} /> },
