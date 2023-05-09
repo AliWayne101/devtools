@@ -3,7 +3,7 @@ import Toggle from '@/components/Toggle'
 import React, { useEffect, useState } from 'react'
 import { FaSignature } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
-import { getSession, useSession } from 'next-auth/react'
+import { getSession} from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 import { Session } from 'next-auth'
@@ -11,7 +11,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
 
 interface returnProps {
-    session: any
+    session: Session | null
 }
 
 const LatestCampaigns = ({ session }: returnProps) => {
@@ -161,7 +161,7 @@ const LatestCampaigns = ({ session }: returnProps) => {
 }
 
 
-export const getServerSideProps: GetServerSideProps<returnProps> = async(context: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps<returnProps> = async(context: any) => {
     const session = await getSession(context);
     
     if (!session) {
