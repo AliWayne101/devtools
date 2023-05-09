@@ -21,10 +21,12 @@ const LatestCampaigns = ({ session }: returnProps) => {
         URL: "",
     });
     const [errorMsg, setErrorMsg] = useState('');
-    const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
+    //const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
 
-    const { data: _session } = useSession();
-    console.log(session);
+    //const { data: _session } = useSession();
+    console.log(`Session: ${session}`);
+    
+    
     const AddWebsite = () => {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
             if (addWebDetails.URL.includes('.')) {
@@ -41,30 +43,30 @@ const LatestCampaigns = ({ session }: returnProps) => {
         })
     }
 
-    const changeStatus = async (status: boolean, _URL: string) => {
-        const newState = status === true ? false : true;
-        const newDocs: ICampaigns[] = [];
-        recentCampaigns.map((doc) => {
-            if (doc.URL !== _URL) {
-                newDocs.push(doc);
-            } else {
-                const mockDoc: ICampaigns = {
-                    _id: doc._id,
-                    Name: doc.Name,
-                    URL: doc.URL,
-                    Tstamp: doc.Tstamp,
-                    isActive: newState,
-                    User: doc.User,
-                }
-                newDocs.push(mockDoc);
-            }
-        });
-        setRecentCampaigns(newDocs);
+    // const changeStatus = async (status: boolean, _URL: string) => {
+    //     const newState = status === true ? false : true;
+    //     const newDocs: ICampaigns[] = [];
+    //     recentCampaigns.map((doc) => {
+    //         if (doc.URL !== _URL) {
+    //             newDocs.push(doc);
+    //         } else {
+    //             const mockDoc: ICampaigns = {
+    //                 _id: doc._id,
+    //                 Name: doc.Name,
+    //                 URL: doc.URL,
+    //                 Tstamp: doc.Tstamp,
+    //                 isActive: newState,
+    //                 User: doc.User,
+    //             }
+    //             newDocs.push(mockDoc);
+    //         }
+    //     });
+    //     setRecentCampaigns(newDocs);
 
-        //write axios code to send request
-        // const updated = await campModel.findOneAndUpdate({ URL: _URL }, { isActive: newState });
-        // console.log(updated);
-    }
+    //     //write axios code to send request
+    //     // const updated = await campModel.findOneAndUpdate({ URL: _URL }, { isActive: newState });
+    //     // console.log(updated);
+    // }
 
     return (
         <div className="w-full mb-20">
@@ -116,7 +118,7 @@ const LatestCampaigns = ({ session }: returnProps) => {
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                             </div>
-                            {
+                            {/* {
                                 recentCampaigns && (
                                     recentCampaigns.map((data, index) => (
                                         <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
@@ -134,7 +136,7 @@ const LatestCampaigns = ({ session }: returnProps) => {
                                         </div>
                                     ))
                                 )
-                            }
+                            } */}
                         </div>
                     </>
                 )
