@@ -1,3 +1,9 @@
+export type iTier = {
+    ALLOWED_CAMPAIGNS: number,
+    ALLOWED_IMPS: number,
+    ALLOWED_NOTIFICATIONS: number,
+}
+
 export const Tier = {
     Free:  {
         ALLOWED_CAMPAIGNS: 5,

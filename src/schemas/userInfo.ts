@@ -6,6 +6,7 @@ export interface IUserInfo {
   Email: string;
   FullName: string;
   sysID: string;
+  Membership: string;
 }
 
 const Users = new Schema({
@@ -17,6 +18,7 @@ const Users = new Schema({
     type: String,
     Default: ''
   },
+  Membership: String,
 });
 
 

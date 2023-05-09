@@ -8,8 +8,16 @@ import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 import mongoose from 'mongoose'
 import axios from 'axios'
+import { Tier, iTier } from '@/Details'
+import { Props } from '@/pages/dashboard';
 
-const LatestCampaigns = ({ sysID, CampData }: { sysID: string, CampData: ICampaigns[]}) => {
+const LatestCampaigns = ({ userDetails, CampData }: {
+    userDetails: {
+        _sysID: string,
+        Membership: string,
+    },
+    CampData: ICampaigns[]
+}) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
@@ -17,9 +25,17 @@ const LatestCampaigns = ({ sysID, CampData }: { sysID: string, CampData: ICampai
     });
     const [errorMsg, setErrorMsg] = useState('');
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
-
+    const [membership, setMembership] = useState<iTier>(Tier.Free);
 
     const { data: session } = useSession();
+
+    useEffect(() => {
+        if (userDetails.Membership === "Free") {
+            setMembership(Tier[userDetails.Membership]);
+            console.log('Setting membership type');
+            console.log(membership);
+        }
+    }, [userDetails])
 
 
     const AddWebsite = () => {
@@ -61,7 +77,7 @@ const LatestCampaigns = ({ sysID, CampData }: { sysID: string, CampData: ICampai
         setRecentCampaigns(newDocs);
 
         const addr = `/api/getdashboard?action=changestatus&target=${JSON.stringify(targetID)}&nstate=${newState}`;
-        axios.get(addr).then((e) => { console.log(e.data)}).catch(e => console.log);
+        axios.get(addr).then((e) => { console.log(e.data) }).catch(e => console.log);
     }
 
     return (
@@ -94,9 +110,16 @@ const LatestCampaigns = ({ sysID, CampData }: { sysID: string, CampData: ICampai
                             {errorMsg.length > 0 && (
                                 <p className="text-red-300 mb-2">{errorMsg}</p>
                             )}
-                            <span onClick={AddWebsite} className='mt-1'>
-                                <Button name="Create" href='none' />
-                            </span>
+                            {
+                                recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
+
+                                    <span onClick={AddWebsite} className='mt-1'>
+                                        <Button name="Create" href='none' />
+                                    </span>
+                                ) : (
+                                    <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
+                                )
+                            }
                         </div>
                     </>
                 ) : (
@@ -117,19 +140,21 @@ const LatestCampaigns = ({ sysID, CampData }: { sysID: string, CampData: ICampai
                             {
                                 recentCampaigns && (
                                     recentCampaigns.map((data, index) => (
-                                        <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
-                                            <div className='pt-4 pb-4 pl-3 pr-2'>
-                                                <Link href={`/campaign/${encodeURIComponent(data.URL)}`} className='link'>
-                                                    {data.Name}
-                                                </Link>
-                                                <div className="mt-1">{data.URL}</div>
+                                        index < 5 && (
+                                            <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
+                                                <div className='pt-4 pb-4 pl-3 pr-2'>
+                                                    <Link href={`/campaign/${encodeURIComponent(data.URL)}`} className='link'>
+                                                        {data.Name}
+                                                    </Link>
+                                                    <div className="mt-1">{data.URL}</div>
+                                                </div>
+                                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.Tstamp.toLocaleDateString()}</div>
+                                                <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
+                                                <div className='pt-4 pb-4 pl-2 pr-2'>
+                                                    Checking..
+                                                </div>
                                             </div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.Tstamp.toLocaleDateString()}</div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2'>
-                                                Checking..
-                                            </div>
-                                        </div>
+                                        )
                                     ))
                                 )
                             }

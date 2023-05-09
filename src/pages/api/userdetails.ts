@@ -30,9 +30,10 @@ export default async function handler(
       FullName: FullName,
       Password: "null",
       sysID: nSysID,
+      Membership: "Free",
     })
       .then((user) => {
-        res.status(200).json({ confirmed: true, sysID: nSysID, exists: true });
+        res.status(200).json({ confirmed: true, sysID: nSysID, exists: true, membership: "Free" });
       })
       .catch((err) => {
         res.status(200).json({
@@ -62,7 +63,7 @@ export default async function handler(
                   .then((updated) => {
                     res
                       .status(200)
-                      .json({ confirmed: true, sysID: nSysID, exists: true });
+                      .json({ confirmed: true, sysID: nSysID, exists: true, membership: updated ? updated.Membership : "Free"});
                   })
                   .catch((err) => {
                     res.status(200).json({
@@ -78,6 +79,7 @@ export default async function handler(
                   sysID: docs[0].sysID,
                   already: true,
                   exists: true,
+                  membership: docs[0].Membership
                 });
               }
             } else {
