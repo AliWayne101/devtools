@@ -9,6 +9,11 @@ export const Tier = {
         ALLOWED_CAMPAIGNS: 5,
         ALLOWED_IMPS: 100000,
         ALLOWED_NOTIFICATIONS: 25,
+    },
+    Admin: {
+        ALLOWED_CAMPAIGNS: 100,
+        ALLOWED_IMPS: 100000000,
+        ALLOWED_NOTIFICATIONS: 2500,
     }
 }
 
