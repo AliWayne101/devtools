@@ -10,6 +10,7 @@ import mongoose from 'mongoose'
 import axios from 'axios'
 import { Tier, iTier } from '@/Details'
 import { Props } from '@/pages/dashboard';
+import Loading from '@/components/Loading'
 
 const LatestCampaigns = ({ userDetails, CampData }: {
     userDetails: {
@@ -26,6 +27,8 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     const [errorMsg, setErrorMsg] = useState('');
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
     const [membership, setMembership] = useState<iTier>(Tier.Free);
+    const [isCreatingCamp, setIsCreatingCamp] = useState(false);
+
 
     const { data: session } = useSession();
 
@@ -39,7 +42,18 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     const AddWebsite = () => {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
             if (addWebDetails.URL.includes('.')) {
-
+                setIsCreatingCamp(true);
+                axios
+                    .get(`/api/getdashboard?action=addcampaign&target=${addWebDetails.URL}&campname=${addWebDetails.Name}&user=${userDetails._sysID}`)
+                    .then((response) => {
+                        if (response.data.created) {
+                            setIsCreatingCamp(false);
+                            setWriteCampaign(false);
+                        } else {
+                            console.log(response.data);
+                        }
+                    })
+                    .catch(err => console.log);
             } else
                 setErrorMsg('Invalid website address');
         } else
@@ -85,41 +99,45 @@ const LatestCampaigns = ({ userDetails, CampData }: {
             </div>
             {
                 writeCampaign ? (
-                    <>
-                        <div className='flex justify-between'>
-                            <div className="inter subTitle text-[var(--slate)]">
-                                Create a new campaign
+                    isCreatingCamp ? (
+                        <Loading />
+                    ) : (
+                        <>
+                            <div className='flex justify-between'>
+                                <div className="inter subTitle text-[var(--slate)]">
+                                    Create a new campaign
+                                </div>
+                                <span onClick={() => setWriteCampaign(false)}><Button name={'Show latest'} href={'null'} /></span>
                             </div>
-                            <span onClick={() => setWriteCampaign(false)}><Button name={'Show latest'} href={'null'} /></span>
-                        </div>
-                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-10">
-                            <div className="flex inter text-[var(--slate)]">
-                                <FaSignature size={20} />&nbsp; Name
-                            </div>
-                            <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' />
-                            <div className="flex inter text-[var(--slate)]">
-                                <BiNetworkChart size={20} />&nbsp; Website
-                            </div>
-                            <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' placeholder='ex: domain.com or subdomain.domain.com' />
-                            <p className="mt-1 mb-2 pl-4 text-[var(--slate)] fira-code">
-                                Please make sure to specify the domain name of the website where the campaign will run,<br />
-                                as notifications will only work on the domain you define.
-                            </p>
-                            {errorMsg.length > 0 && (
-                                <p className="text-red-300 mb-2">{errorMsg}</p>
-                            )}
-                            {
-                                recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
+                            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-10">
+                                <div className="flex inter text-[var(--slate)]">
+                                    <FaSignature size={20} />&nbsp; Name
+                                </div>
+                                <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' />
+                                <div className="flex inter text-[var(--slate)]">
+                                    <BiNetworkChart size={20} />&nbsp; Website
+                                </div>
+                                <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' placeholder='ex: domain.com or subdomain.domain.com' />
+                                <p className="mt-1 mb-2 pl-4 text-[var(--slate)] fira-code">
+                                    Please make sure to specify the domain name of the website where the campaign will run,<br />
+                                    as notifications will only work on the domain you define.
+                                </p>
+                                {errorMsg.length > 0 && (
+                                    <p className="text-red-300 mb-2">{errorMsg}</p>
+                                )}
+                                {
+                                    recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
 
-                                    <span onClick={AddWebsite} className='mt-1'>
-                                        <Button name="Create" href='none' />
-                                    </span>
-                                ) : (
-                                    <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
-                                )
-                            }
-                        </div>
-                    </>
+                                        <span onClick={AddWebsite} className='mt-1'>
+                                            <Button name="Create" href='null' />
+                                        </span>
+                                    ) : (
+                                        <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
+                                    )
+                                }
+                            </div>
+                        </>
+                    )
                 ) : (
                     <>
                         <div className='flex justify-between'>

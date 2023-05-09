@@ -28,8 +28,21 @@ export default async function handler(
           res.status(200).json({ found: true, docs: doc });
         })
         .catch((err) => {
-          res.status(200).json({ found: true, error: err });
+          res.status(200).json({ found: false, error: err });
         });
+    } else if (action === "addcampaign") {
+      let { campname, user } = req.body;
+      campModel.create({
+        _id: new mongoose.Types.ObjectId(),
+        isActive: true,
+        Name: campname,
+        URL: target,
+        User: user
+      }).then((doc) => {
+        res.status(200).json({ created: true});
+      }).catch((err) =>{
+        res.status(200).json({ created: false});
+      });
     }
   }
 }

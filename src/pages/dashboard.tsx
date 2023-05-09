@@ -70,14 +70,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (session && session.user) {
     try {
       const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${session.user.email}`);
-      console.log('Checking first response..');
-      console.log(response.data);
       if (response.data.exists) {
         if (response.data.confirmed)
           _sysID = response.data.sysID;
           membership = response.data.membership;
       } else {
-        console.log('Registering new data..');
         const resp2 = await axios.post(`${Web.Server}/api/userdetails`, {
           Email: session.user.email,
           FullName: session.user.name,

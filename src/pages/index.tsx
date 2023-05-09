@@ -1,3 +1,4 @@
+import Loading from '@/components/Loading'
 import Demo from '@/sections/Demo'
 import Footer from '@/sections/Footer'
 import Hero from '@/sections/Hero'
