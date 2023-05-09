@@ -21,5 +21,5 @@ export const Tier = [
 
 export const Web = {
   Name: "DevTools",
-  Server: "https://devtools-wayne.vercel.app",
+  Server: "http://localhost:3000",
 };
