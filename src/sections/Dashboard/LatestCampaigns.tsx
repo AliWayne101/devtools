@@ -41,14 +41,14 @@ const LatestCampaigns = ({ userDetails, CampData }: {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
             if (addWebDetails.URL.includes('.')) {
                 setIsCreatingCamp(true);
-                console.log(addWebDetails);
-                console.log(userDetails);
                 axios
                     .get(`/api/getdashboard?action=addcampaign&target=${addWebDetails.URL}&campname=${addWebDetails.Name}&user=${userDetails._sysID}`)
                     .then((response) => {
                         if (response.data.created) {
                             setIsCreatingCamp(false);
                             setWriteCampaign(false);
+
+                            //Manually add new entry to be shown
                         } else {
                             console.log(response.data);
                         }

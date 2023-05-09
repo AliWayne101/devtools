@@ -21,7 +21,7 @@ export default async function handler(
           res.status(200).json({ found: false, error: err });
         });
     } else if (action === "changestatus") {
-      let nState = req.body.nstate === "true" ? true : false;
+      let nState = req.query.nstate === "true" ? true : false;
       campModel
         .findOneAndUpdate(
           { _id: JSON.parse(target + "") },
@@ -35,14 +35,14 @@ export default async function handler(
           res.status(200).json({ found: false, error: err });
         });
     } else if (action === "addcampaign") {
-      let { campname, user } = req.body;
+      let { campname, _sysID } = req.query;
       campModel
         .create({
           _id: new mongoose.Types.ObjectId(),
           isActive: true,
           Name: campname,
           URL: target,
-          User: user,
+          User: _sysID,
         })
         .then((doc) => {
           res.status(200).json({ created: true });
