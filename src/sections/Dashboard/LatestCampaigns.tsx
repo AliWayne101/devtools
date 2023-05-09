@@ -6,13 +6,6 @@ import { BiNetworkChart } from 'react-icons/bi'
 import { getSession, useSession} from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
-import { Session } from 'next-auth'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-
-
-interface returnProps {
-    session: Session | null
-}
 
 const LatestCampaigns = () => {
     const [writeCampaign, setWriteCampaign] = useState(false);
@@ -158,26 +151,6 @@ const LatestCampaigns = () => {
             </div>
         </div>
     )
-}
-
-
-export const getServerSideProps: GetServerSideProps<returnProps> = async(context: any) => {
-    const session = await getSession(context);
-    
-    if (!session) {
-        return {
-            redirect: {
-                destination: "/",
-                permanent: false
-            }
-        }
-    }
-
-    return {
-        props: {
-            session,
-        }
-    }
 }
 
 
