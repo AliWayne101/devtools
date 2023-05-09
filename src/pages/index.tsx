@@ -21,7 +21,6 @@ const Index = () => {
       <Navbar />
       <main>
         <Hero />
-        <Loading />
         <Setup />
       </main>
       <Integration />
