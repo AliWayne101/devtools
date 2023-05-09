@@ -26,15 +26,14 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     });
     const [errorMsg, setErrorMsg] = useState('');
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
-    const [membership, setMembership] = useState<iTier>(Tier.Free);
+    const [membership, setMembership] = useState<iTier>();
     const [isCreatingCamp, setIsCreatingCamp] = useState(false);
 
     const { data: session } = useSession();
 
     useEffect(() => {
-        if (userDetails.Membership === "Free") {
-            setMembership(Tier[userDetails.Membership]);
-        }
+        const _tier = Tier.find(({ Membership }) => Membership === userDetails.Membership);
+        setMembership(_tier);
     }, [userDetails.Membership])
 
 
@@ -127,13 +126,15 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                     <p className="text-red-300 mb-2">{errorMsg}</p>
                                 )}
                                 {
-                                    recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
+                                    membership && (
+                                        recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
 
-                                        <span onClick={AddWebsite} className='mt-1'>
-                                            <Button name="Create" href='null' />
-                                        </span>
-                                    ) : (
-                                        <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
+                                            <span onClick={AddWebsite} className='mt-1'>
+                                                <Button name="Create" href='null' />
+                                            </span>
+                                        ) : (
+                                            <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
+                                        )
                                     )
                                 }
                             </div>

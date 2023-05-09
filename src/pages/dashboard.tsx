@@ -41,7 +41,7 @@ const Dashboard = ({ userDetails }: Props) => {
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
       <Navbar />
-      <Details camps={TotalCampaigns.length} notifs={0} imps={0} />
+      <Details camps={TotalCampaigns.length} notifs={0} imps={0} userDetails={userDetails} />
       <main>
         <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} />
         <Footer />
