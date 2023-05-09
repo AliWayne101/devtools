@@ -35,14 +35,14 @@ export default async function handler(
           res.status(200).json({ found: false, error: err });
         });
     } else if (action === "addcampaign") {
-      let { campname, _sysID } = req.query;
+      let { campname, user } = req.query;
       campModel
         .create({
           _id: new mongoose.Types.ObjectId(),
           isActive: true,
           Name: campname,
           URL: target,
-          User: _sysID,
+          User: user,
         })
         .then((doc) => {
           res.status(200).json({ created: true });
