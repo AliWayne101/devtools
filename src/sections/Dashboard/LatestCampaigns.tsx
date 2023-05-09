@@ -38,7 +38,6 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     }, [userDetails.Membership])
 
     useEffect(() => {
-        console.log(CampData);
         setRecentCampaigns(CampData);
     }, [CampData])
 
@@ -171,7 +170,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                             </Link>
                                             <div className="mt-1">{data.URL}</div>
                                         </div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.Tstamp.toLocaleDateString()}</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{new Date(data.Tstamp).toLocaleDateString()}</div>
                                         <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
                                         <div className='pt-4 pb-4 pl-2 pr-2'>
                                             Checking..
