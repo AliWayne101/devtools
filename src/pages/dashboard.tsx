@@ -93,7 +93,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     props: {
       userDetails: {
         _sysID: _sysID,
-        Membership: "Free"
+        Membership: membership
       }
     }
   }
