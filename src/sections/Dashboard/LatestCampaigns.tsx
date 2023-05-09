@@ -32,8 +32,6 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     useEffect(() => {
         if (userDetails.Membership === "Free") {
             setMembership(Tier[userDetails.Membership]);
-            console.log('Setting membership type');
-            console.log(membership);
         }
     }, [userDetails.Membership])
 

@@ -21,7 +21,6 @@ const Dashboard = ({ userDetails }: Props) => {
 
   const [TotalCampaigns, setTotalCampaigns] = useState<ICampaigns[]>([]);
 
-
   useEffect(() => {
     axios
       .get(`/api/getdashboard?action=allcampaigns&target=${userDetails._sysID}`)
@@ -69,9 +68,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   let _sysID = "null";
   let membership = "Free";
   if (session && session.user) {
-    const target = encodeURIComponent(session.user.email + "");
     try {
-      const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${target}`);
+      const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${session.user.email}`);
       console.log('Checking first response..');
       console.log(response.data);
       if (response.data.exists) {
