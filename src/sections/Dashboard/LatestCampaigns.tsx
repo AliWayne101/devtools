@@ -73,7 +73,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
 
     const refreshCampaignData = () => {
         axios
-            .get(`/api/getdashboard?action=allcampaigns&action=${userDetails._sysID}`)
+            .get(`/api/getdashboard?action=allcampaigns&target=${userDetails._sysID}`)
             .then((response) => {
                 if (response.data.found) {
                     setRecentCampaigns(response.data.docs);
