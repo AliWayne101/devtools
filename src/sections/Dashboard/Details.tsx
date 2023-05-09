@@ -60,7 +60,7 @@ const Details = ({ camps, notifs, imps, userDetails }: {
                         </div>
                         <div className="p-5">{impressions} / {
                             memType ? (
-                                memType.ALLOWED_IMPS
+                                memType.ALLOWED_IMPS.toLocaleString()
                             ) : "0"
                         } Impressions</div>
                     </div>
