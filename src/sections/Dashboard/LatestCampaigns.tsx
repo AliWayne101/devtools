@@ -204,7 +204,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                 recentCampaigns.map((data, index) => (
                                     <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
                                         <div className='pt-4 pb-4 pl-3 pr-2'>
-                                            <Link href={`/campaign/${data.User}`} className='link text-ellipsis overflow-hidden' title={data.Name}>
+                                            <Link href={`/campaign/${data.selfID}`} className='link text-ellipsis overflow-hidden' title={data.Name}>
                                                 {data.Name}
                                             </Link>
                                             <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
@@ -214,7 +214,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                         <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)]'>
                                             <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
                                             <span onClick={() => EditCampaign(data.User, data.selfID)} className='cursor-pointer'><RiEdit2Fill size={20} title='Edit this campaign' /></span>
-                                            <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={20} title='Delete this campaign' /></span>
+                                            <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={16} title='Delete this campaign' /></span>
                                         </div>
                                     </div>
                                 ))
