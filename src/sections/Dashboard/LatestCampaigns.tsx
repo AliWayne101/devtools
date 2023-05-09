@@ -1,7 +1,7 @@
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
 import React, { useEffect, useState } from 'react'
-import { FaSignature } from 'react-icons/fa'
+import { FaCode, FaSignature, FaTrash } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
 import { getSession, useSession } from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
@@ -11,6 +11,7 @@ import axios from 'axios'
 import { Tier, iTier } from '@/Details'
 import { Props } from '@/pages/dashboard';
 import Loading from '@/components/Loading'
+import { RiEdit2Fill } from 'react-icons/ri'
 
 const LatestCampaigns = ({ userDetails, CampData }: {
     userDetails: {
@@ -28,10 +29,9 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
     const [membership, setMembership] = useState<iTier>();
     const [isCreatingCamp, setIsCreatingCamp] = useState(false);
-
+    const [showModal, setShowModal] = useState(false);
     const { data: session } = useSession();
 
-    console.log(CampData);
     useEffect(() => {
         const _tier = Tier.find(({ Membership }) => Membership === userDetails.Membership);
         setMembership(_tier);
@@ -41,6 +41,48 @@ const LatestCampaigns = ({ userDetails, CampData }: {
         setRecentCampaigns(CampData);
     }, [CampData])
 
+    const DeleteCampaign = (UserID: string, CampaignID: string) => {
+        if (UserID.length === 32 && CampaignID.length === 10) {
+            setIsCreatingCamp(true);
+            setWriteCampaign(true);
+            axios
+                .get(`/api/getdashboard?action=deletecampaign&target=${CampaignID}&userid=${UserID}`)
+                .then((response) => {
+                    if (response.data.deleted) {
+                        refreshCampaignData();
+                    } else {
+                        console.log(response.data);
+                    }
+                })
+                .catch(err => console.log);
+        }
+    }
+    const InstallCampaign = (UserID: string, CampaignID: string) => {
+        if (UserID.length === 32 && CampaignID.length === 10) {
+            //Create a model component and make it visible using css
+            //option 2 - try rendering it using useStateHook, add your userid and campaignid in hook, pass it as attrib to component
+            //  and put those values as useStateHook inside it might rerender it
+            //in last, create a hook to hide and show it
+        }
+    }
+    const EditCampaign = (UserID: string, CampaignID: string) => {
+        if (UserID.length === 32 && CampaignID.length === 10) {
+            //Create a component, similar to adding new campaign and fill all values using useStateHooks
+        }
+    }
+
+    const refreshCampaignData = () => {
+        axios
+            .get(`/api/getdashboard?action=allcampaigns&action=${userDetails._sysID}`)
+            .then((response) => {
+                if (response.data.found) {
+                    setRecentCampaigns(response.data.docs);
+                }
+                setIsCreatingCamp(false);
+                setWriteCampaign(false);
+            })
+            .catch(err => console.log);
+    }
 
     const AddWebsite = () => {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
@@ -50,11 +92,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                     .get(`/api/getdashboard?action=addcampaign&target=${addWebDetails.URL}&campname=${addWebDetails.Name}&user=${userDetails._sysID}`)
                     .then((response) => {
                         if (response.data.created) {
-                            setIsCreatingCamp(false);
-                            setWriteCampaign(false);
-
-                            //Manually add new entry to be shown
-                            //Reload the useState of entries manually and hook an event of useEffect to rerender it, first try without rerendering
+                            refreshCampaignData();
                         } else {
                             console.log(response.data);
                         }
@@ -87,6 +125,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                     Tstamp: doc.Tstamp,
                     isActive: newState,
                     User: doc.User,
+                    selfID: doc.selfID,
                 }
                 newDocs.push(mockDoc);
                 targetID = doc._id;
@@ -165,15 +204,17 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                 recentCampaigns.map((data, index) => (
                                     <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
                                         <div className='pt-4 pb-4 pl-3 pr-2'>
-                                            <Link href={`/campaign/${data.User}`} className='link'>
+                                            <Link href={`/campaign/${data.User}`} className='link text-ellipsis overflow-hidden' title={data.Name}>
                                                 {data.Name}
                                             </Link>
-                                            <div className="mt-1">{data.URL}</div>
+                                            <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
                                         </div>
                                         <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{new Date(data.Tstamp).toLocaleDateString()}</div>
                                         <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2'>
-                                            Checking..
+                                        <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)]'>
+                                            <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
+                                            <span onClick={() => EditCampaign(data.User, data.selfID)} className='cursor-pointer'><RiEdit2Fill size={20} title='Edit this campaign' /></span>
+                                            <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={20} title='Delete this campaign' /></span>
                                         </div>
                                     </div>
                                 ))

@@ -1,20 +1,8 @@
+import { generateID } from "@/Details";
 import Connect from "@/schemas/connect";
 import UserModel from "@/schemas/userInfo";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-
-const generateID = () => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const length = 32;
-  let result = "";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
-
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,7 +10,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     Connect();
-    const nSysID = generateID();
+    const nSysID = generateID(32);
     const { Email, FullName } = req.body;
     UserModel.create({
       _id: new mongoose.Types.ObjectId(),
@@ -53,7 +41,7 @@ export default async function handler(
           .then((docs) => {
             if (docs.length > 0) {
               if (docs[0].sysID.length < 2) {
-                const nSysID = generateID();
+                const nSysID = generateID(32);
                 UserModel.findOneAndUpdate(
                   { Email: target },
                   { sysID: nSysID },

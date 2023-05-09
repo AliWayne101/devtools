@@ -23,3 +23,15 @@ export const Web = {
   Name: "DevTools",
   Server: "https://devtools-wayne.vercel.app",
 };
+
+export const generateID = (length: number) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+

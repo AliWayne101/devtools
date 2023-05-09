@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.14",
     "@types/node": "20.1.0",
+    "@types/nprogress": "^0.2.0",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
@@ -23,6 +24,7 @@
     "mongoose": "^7.1.0",
     "next": "13.4.1",
     "next-auth": "^4.22.1",
+    "nprogress": "^0.2.0",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",

@@ -1,3 +1,4 @@
+import { generateID } from "@/Details";
 import campModel from "@/schemas/campaignInfo";
 import Connect from "@/schemas/connect";
 import mongoose from "mongoose";
@@ -43,6 +44,7 @@ export default async function handler(
           Name: campname,
           URL: target,
           User: user,
+          selfID: generateID(10)
         })
         .then((doc) => {
           res.status(200).json({ created: true });
