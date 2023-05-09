@@ -5,3 +5,8 @@ export const Tier = {
         ALLOWED_NOTIFICATIONS: 25,
     }
 }
+
+export const Web = {
+    Name: "DevTools",
+    Server: "https://devtools-wayne.vercel.app"
+}

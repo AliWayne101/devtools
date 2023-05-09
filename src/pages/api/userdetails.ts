@@ -45,7 +45,8 @@ export default async function handler(
   } else {
     if (req.query.action && req.query.target) {
       Connect();
-      const { action, target } = req.query;
+      const { action, _target } = req.query;
+      const target = decodeURIComponent(_target+"");
       if (action === "generateID") {
         UserModel.find({ Email: target })
           .exec()

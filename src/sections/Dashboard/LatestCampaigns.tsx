@@ -6,25 +6,20 @@ import { BiNetworkChart } from 'react-icons/bi'
 import { getSession, useSession } from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
+import mongoose from 'mongoose'
+import axios from 'axios'
 
-const LatestCampaigns = ({ sysID }: { sysID: string }) => {
+const LatestCampaigns = ({ sysID, CampData }: { sysID: string, CampData: ICampaigns[]}) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
         Name: "",
         URL: "",
     });
     const [errorMsg, setErrorMsg] = useState('');
-    //const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>([]);
+    const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
 
-    console.log(sysID);
 
     const { data: session } = useSession();
-    console.log(`Session: ${session}`);
-
-    useEffect(() => {
-        console.log('loaded');
-        
-    }, [])
 
 
     const AddWebsite = () => {
@@ -43,30 +38,31 @@ const LatestCampaigns = ({ sysID }: { sysID: string }) => {
         })
     }
 
-    // const changeStatus = async (status: boolean, _URL: string) => {
-    //     const newState = status === true ? false : true;
-    //     const newDocs: ICampaigns[] = [];
-    //     recentCampaigns.map((doc) => {
-    //         if (doc.URL !== _URL) {
-    //             newDocs.push(doc);
-    //         } else {
-    //             const mockDoc: ICampaigns = {
-    //                 _id: doc._id,
-    //                 Name: doc.Name,
-    //                 URL: doc.URL,
-    //                 Tstamp: doc.Tstamp,
-    //                 isActive: newState,
-    //                 User: doc.User,
-    //             }
-    //             newDocs.push(mockDoc);
-    //         }
-    //     });
-    //     setRecentCampaigns(newDocs);
+    const changeStatus = async (status: boolean, _URL: string) => {
+        const newState = status === true ? false : true;
+        const newDocs: ICampaigns[] = [];
+        let targetID: mongoose.Types.ObjectId = new mongoose.Types.ObjectId();
+        recentCampaigns.map((doc) => {
+            if (doc.URL !== _URL) {
+                newDocs.push(doc);
+            } else {
+                const mockDoc: ICampaigns = {
+                    _id: doc._id,
+                    Name: doc.Name,
+                    URL: doc.URL,
+                    Tstamp: doc.Tstamp,
+                    isActive: newState,
+                    User: doc.User,
+                }
+                newDocs.push(mockDoc);
+                targetID = doc._id;
+            }
+        });
+        setRecentCampaigns(newDocs);
 
-    //     //write axios code to send request
-    //     // const updated = await campModel.findOneAndUpdate({ URL: _URL }, { isActive: newState });
-    //     // console.log(updated);
-    // }
+        const addr = `/api/getdashboard?action=changestatus&target=${JSON.stringify(targetID)}&nstate=${newState}`;
+        axios.get(addr).then((e) => { console.log(e.data)}).catch(e => console.log);
+    }
 
     return (
         <div className="w-full mb-20">
@@ -118,7 +114,7 @@ const LatestCampaigns = ({ sysID }: { sysID: string }) => {
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                             </div>
-                            {/* {
+                            {
                                 recentCampaigns && (
                                     recentCampaigns.map((data, index) => (
                                         <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
@@ -136,7 +132,7 @@ const LatestCampaigns = ({ sysID }: { sysID: string }) => {
                                         </div>
                                     ))
                                 )
-                            } */}
+                            }
                         </div>
                     </>
                 )

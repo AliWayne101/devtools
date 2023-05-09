@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconContext } from 'react-icons'
 import { RiDashboardFill } from 'react-icons/ri'
 import { FaBell, FaEye } from 'react-icons/fa';
-import { Tier } from '@/TierDetails';
+import { Tier } from '@/Details';
 
-
-const Details = () => {
+const Details = ({camps, notifs, imps} :{camps: any, notifs: any, imps: any}) => {
 
     const [campaigns, setCampaigns] = useState(0);
     const [notifications, setNotifications] = useState(0);
     const [impressions, setImpressions] = useState(0);
+
+    useEffect(() => {
+        setCampaigns(camps);
+        setNotifications(notifs);
+        setImpressions(imps);
+    }, [camps, notifs, imps])
 
   return (
     <div className='flex w-full bg-secondary mt-20'>
