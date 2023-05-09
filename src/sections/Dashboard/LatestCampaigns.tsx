@@ -37,6 +37,11 @@ const LatestCampaigns = ({ userDetails, CampData }: {
         setMembership(_tier);
     }, [userDetails.Membership])
 
+    useEffect(() => {
+        console.log(CampData);
+        setRecentCampaigns(CampData);
+    }, [CampData])
+
 
     const AddWebsite = () => {
         if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
