@@ -1,17 +1,17 @@
 import Button from '@/components/Button'
 import Toggle from '@/components/Toggle'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { FaCode, FaSignature, FaTrash } from 'react-icons/fa'
 import { BiNetworkChart } from 'react-icons/bi'
-import { getSession, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Link from 'next/link'
 import mongoose from 'mongoose'
 import axios from 'axios'
 import { Tier, iTier } from '@/Details'
-import { Props } from '@/pages/dashboard';
 import Loading from '@/components/Loading'
 import { RiEdit2Fill } from 'react-icons/ri'
+import { Web } from '@/Details'
 
 const LatestCampaigns = ({ userDetails, CampData }: {
     userDetails: {
@@ -30,7 +30,10 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     const [membership, setMembership] = useState<iTier>();
     const [isCreatingCamp, setIsCreatingCamp] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [curCampAddr, setCurCampAddr] = useState("");
     const { data: session } = useSession();
+
+    const copyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const _tier = Tier.find(({ Membership }) => Membership === userDetails.Membership);
@@ -59,10 +62,8 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     }
     const InstallCampaign = (UserID: string, CampaignID: string) => {
         if (UserID.length === 32 && CampaignID.length === 10) {
-            //Create a model component and make it visible using css
-            //option 2 - try rendering it using useStateHook, add your userid and campaignid in hook, pass it as attrib to component
-            //  and put those values as useStateHook inside it might rerender it
-            //in last, create a hook to hide and show it
+            setCurCampAddr(CampaignID);
+            setShowModal(true);
         }
     }
     const EditCampaign = (UserID: string, CampaignID: string) => {
@@ -137,93 +138,125 @@ const LatestCampaigns = ({ userDetails, CampData }: {
         axios.get(addr).then((e) => { console.log(e.data) }).catch(e => console.log);
     }
 
+    const CopyText = async () => {
+        try {
+            await navigator.clipboard.writeText(copyRef.current?.innerText || '');
+            console.log('Text has been copied');
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <div className="w-full mb-20">
             <div className="mainTitle fira-code text-[var(--light-slate)] mb-5">
                 Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
             </div>
+
             {
-                writeCampaign ? (
-                    isCreatingCamp ? (
-                        <Loading />
+                showModal ? (
+                    <>
+                        <div className='flex justify-between'>
+                            <div className="inter subTitle text-[var(--slate)]">
+                                Installation
+                            </div>
+                            <span onClick={() => { setShowModal(false); }}><Button name={'Show Campaigns'} href={'null'} /></span>
+                        </div>
+                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-5  fira-code text-[var(--slate)]">
+                            Copy and paste the following JS Code Snippet before the end of the <span className="link">head</span> tag of your website.
+                            <div className="overflow-auto min-h-fit bg-primary p-10 mt-2 mb-2" ref={copyRef}>
+                                &lt;!-- DevTools Code from {Web.Server} --&gt;<br />
+                                &lt;script defer src=&quot;{Web.Server}/code/{userDetails._sysID}{curCampAddr}&quot;&gt;&lt;/script&gt;<br />
+                                &lt;-- END DevTools Code --&gt;
+                            </div>
+                            <span onClick={() => CopyText()}><Button name={'Copy'} href={'null'} /></span>
+                        </div>
+                    </>
+                ) : (
+                    writeCampaign ? (
+                        isCreatingCamp ? (
+                            <Loading />
+                        ) : (
+                            <>
+                                <div className='flex justify-between'>
+                                    <div className="inter subTitle text-[var(--slate)]">
+                                        Create a new campaign
+                                    </div>
+                                    <span onClick={() => setWriteCampaign(false)}><Button name={'Show Campaigns'} href={'null'} /></span>
+                                </div>
+                                <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-10">
+                                    <div className="flex inter text-[var(--slate)]">
+                                        <FaSignature size={20} />&nbsp; Name
+                                    </div>
+                                    <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' />
+                                    <div className="flex inter text-[var(--slate)]">
+                                        <BiNetworkChart size={20} />&nbsp; Website
+                                    </div>
+                                    <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' placeholder='ex: domain.com or subdomain.domain.com' />
+                                    <p className="mt-1 mb-2 pl-4 text-[var(--slate)] fira-code">
+                                        Please make sure to specify the domain name of the website where the campaign will run,<br />
+                                        as notifications will only work on the domain you define.
+                                    </p>
+                                    {errorMsg.length > 0 && (
+                                        <p className="text-red-300 mb-2">{errorMsg}</p>
+                                    )}
+                                    {
+                                        membership && (
+                                            recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
+
+                                                <span onClick={AddWebsite} className='mt-1'>
+                                                    <Button name="Create" href='null' />
+                                                </span>
+                                            ) : (
+                                                <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
+                                            )
+                                        )
+                                    }
+                                </div>
+                            </>
+                        )
                     ) : (
                         <>
                             <div className='flex justify-between'>
                                 <div className="inter subTitle text-[var(--slate)]">
-                                    Create a new campaign
+                                    Latest Campaigns
                                 </div>
-                                <span onClick={() => setWriteCampaign(false)}><Button name={'Show latest'} href={'null'} /></span>
+                                <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
                             </div>
-                            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-10">
-                                <div className="flex inter text-[var(--slate)]">
-                                    <FaSignature size={20} />&nbsp; Name
+                            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
+                                <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--light-slate)]">
+                                    <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
+                                    <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Created on</div>
+                                    <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
+                                    <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                                 </div>
-                                <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' />
-                                <div className="flex inter text-[var(--slate)]">
-                                    <BiNetworkChart size={20} />&nbsp; Website
-                                </div>
-                                <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' placeholder='ex: domain.com or subdomain.domain.com' />
-                                <p className="mt-1 mb-2 pl-4 text-[var(--slate)] fira-code">
-                                    Please make sure to specify the domain name of the website where the campaign will run,<br />
-                                    as notifications will only work on the domain you define.
-                                </p>
-                                {errorMsg.length > 0 && (
-                                    <p className="text-red-300 mb-2">{errorMsg}</p>
-                                )}
                                 {
-                                    membership && (
-                                        recentCampaigns.length < membership.ALLOWED_CAMPAIGNS ? (
+                                    recentCampaigns.map((data, index) => (
+                                        <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
+                                            <div className='pt-4 pb-4 pl-3 pr-2'>
+                                                <Link href={`/campaign/${data.selfID}`} className='link text-ellipsis overflow-hidden' title={data.Name}>
+                                                    {data.Name}
+                                                </Link>
+                                                <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
+                                            </div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{new Date(data.Tstamp).toLocaleDateString()}</div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)]'>
+                                                <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
+                                                <span onClick={() => EditCampaign(data.User, data.selfID)} className='cursor-pointer'><RiEdit2Fill size={20} title='Edit this campaign' /></span>
+                                                <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={16} title='Delete this campaign' /></span>
+                                            </div>
+                                        </div>
+                                    ))
 
-                                            <span onClick={AddWebsite} className='mt-1'>
-                                                <Button name="Create" href='null' />
-                                            </span>
-                                        ) : (
-                                            <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
-                                        )
-                                    )
                                 }
                             </div>
                         </>
                     )
-                ) : (
-                    <>
-                        <div className='flex justify-between'>
-                            <div className="inter subTitle text-[var(--slate)]">
-                                Latest Campaigns
-                            </div>
-                            <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
-                        </div>
-                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
-                            <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--light-slate)]">
-                                <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
-                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Created on</div>
-                                <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
-                                <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
-                            </div>
-                            {
-                                recentCampaigns.map((data, index) => (
-                                    <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
-                                        <div className='pt-4 pb-4 pl-3 pr-2'>
-                                            <Link href={`/campaign/${data.selfID}`} className='link text-ellipsis overflow-hidden' title={data.Name}>
-                                                {data.Name}
-                                            </Link>
-                                            <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
-                                        </div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{new Date(data.Tstamp).toLocaleDateString()}</div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)]'>
-                                            <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
-                                            <span onClick={() => EditCampaign(data.User, data.selfID)} className='cursor-pointer'><RiEdit2Fill size={20} title='Edit this campaign' /></span>
-                                            <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={16} title='Delete this campaign' /></span>
-                                        </div>
-                                    </div>
-                                ))
-
-                            }
-                        </div>
-                    </>
                 )
             }
+
+
             <div className='flex inter subTitle text-[var(--slate)] mt-10'>
                 Latest Notifications
             </div>
