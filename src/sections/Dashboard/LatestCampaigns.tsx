@@ -149,7 +149,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
 
     return (
         <div className="w-full mb-20">
-            <div className="mainTitle fira-code text-[var(--light-slate)] mb-5">
+            <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
                 Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
             </div>
 
@@ -162,7 +162,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                             </div>
                             <span onClick={() => { setShowModal(false); }}><Button name={'Show Campaigns'} href={'null'} /></span>
                         </div>
-                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-5  fira-code text-[var(--slate)]">
+                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] p-5  font-fira text-[var(--slate)]">
                             Copy and paste the following JS Code Snippet before the end of the <span className="link">head</span> tag of your website.
                             <div className="overflow-auto min-h-fit bg-primary p-10 mt-2 mb-2" ref={copyRef}>
                                 &lt;!-- DevTools Code from {Web.Server} --&gt;<br />
@@ -188,12 +188,12 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                     <div className="flex inter text-[var(--slate)]">
                                         <FaSignature size={20} />&nbsp; Name
                                     </div>
-                                    <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' />
+                                    <input type="text" name="Name" id="Name" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] font-fira' />
                                     <div className="flex inter text-[var(--slate)]">
                                         <BiNetworkChart size={20} />&nbsp; Website
                                     </div>
-                                    <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] fira-code' placeholder='ex: domain.com or subdomain.domain.com' />
-                                    <p className="mt-1 mb-2 pl-4 text-[var(--slate)] fira-code">
+                                    <input type="text" name="URL" id="URL" onChange={(e) => handleChange(e.currentTarget)} className='mt-2 mb-3 p-2 border-2 border-indigo-400 bg-transparent w-full sm:w-[500px] focus:outline-none text-[var(--slate)] font-fira' placeholder='ex: domain.com or subdomain.domain.com' />
+                                    <p className="mt-1 mb-2 pl-4 text-[var(--slate)] font-fira">
                                         Please make sure to specify the domain name of the website where the campaign will run,<br />
                                         as notifications will only work on the domain you define.
                                     </p>
@@ -224,7 +224,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                 <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
                             </div>
                             <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
-                                <div className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--light-slate)]">
+                                <div className="w-full grid grid-cols-3 sm:grid-cols-4 font-fira text-[var(--light-slate)]">
                                     <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
                                     <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Created on</div>
                                     <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
@@ -232,14 +232,14 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                 </div>
                                 {
                                     recentCampaigns.map((data, index) => (
-                                        <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 fira-code text-[var(--slate)]">
+                                        <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 font-fira text-[var(--slate)]">
                                             <div className='pt-4 pb-4 pl-3 pr-2'>
-                                                <Link href={`/campaign/${data.selfID}`} className='link text-ellipsis overflow-hidden' title={data.Name}>
-                                                    {data.Name}
+                                                <Link href={`/campaign/${data.selfID}`} className='text-ellipsis overflow-hidden' title={data.Name}>
+                                                    <span className="link mb-1 font-fira">{data.Name}</span>
                                                 </Link>
                                                 <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
                                             </div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{new Date(data.Tstamp).toLocaleDateString()}</div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex font-fira'>{new Date(data.Tstamp).toLocaleDateString()}</div>
                                             <div className='pt-4 pb-4 pl-2 pr-2'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
                                             <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)]'>
                                                 <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
@@ -261,14 +261,14 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                 Latest Notifications
             </div>
             <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
-                <div className="w-full grid grid-cols-3 sm:grid-cols-5 fira-code text-[var(--light-slate)]">
+                <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--light-slate)]">
                     <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
                     <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger</div>
                     <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Duration</div>
                     <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
                     <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                 </div>
-                <div className="w-full grid grid-cols-3 sm:grid-cols-5 fira-code text-[var(--slate)]">
+                <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]">
 
                 </div>
             </div>

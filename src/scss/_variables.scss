@@ -12,6 +12,7 @@
     --tmedfull: 26px;
     --tmed: 22px;
     --tbody: 16px;
+    --tsmall: 12px;
 }
 
 .bg-primary {
@@ -36,4 +37,12 @@
 
 .font-inter {
     font-family: var(--inter);
+}
+
+.size-body {
+    font-size: var(--tbody);
+}
+
+.size-small {
+    font-size: var(--tsmall);
 }

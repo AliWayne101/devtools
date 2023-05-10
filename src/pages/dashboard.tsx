@@ -38,7 +38,7 @@ const Dashboard = ({ userDetails }: Props) => {
     <>
       <Head>
         <title>Dashboard - DevTools</title>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
       </Head>
       <Navbar />
       <Details camps={TotalCampaigns.length} notifs={0} imps={0} userDetails={userDetails} />
