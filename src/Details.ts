@@ -34,4 +34,3 @@ export const generateID = (length: number) => {
   }
   return result;
 };
-

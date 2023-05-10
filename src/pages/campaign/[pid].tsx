@@ -20,23 +20,24 @@ const Index = ({ userDetails }: Props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [mountDoc, setMountDoc] = useState<ICampaigns>();
-  console.log(userDetails);
-
+  
   useEffect(() => {
-    axios.get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${userDetails._sysID}`)
-      .then((response) => {
-        setIsLoading(false);
-        console.log(response.data);
-        setMountDoc(response.data.doc);
-        if (response.data.exists) {
+    if (pid) {
+      axios.get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${userDetails._sysID}`)
+        .then((response) => {
           setIsLoading(false);
+          console.log(response.data);
           setMountDoc(response.data.doc);
-        } else {
-          //router.push('/dashboard');
-          console.log('Not found');
-        }
-      })
-      .catch(err => console.log);
+          if (response.data.exists) {
+            setIsLoading(false);
+            setMountDoc(response.data.doc);
+          } else {
+            //router.push('/dashboard');
+            console.log('Not found');
+          }
+        })
+        .catch(err => console.log);
+    }
   }, [pid]);
 
   return (

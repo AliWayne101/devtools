@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { BiNetworkChart } from 'react-icons/bi'
 import { MdEmail } from 'react-icons/md'
 
+
 const Create = () => {
     const router = useRouter();
     const { pid } = router.query;
@@ -121,4 +122,9 @@ const Create = () => {
     )
 }
 
-export default Create
+export default Create;
+
+
+interface DocProps {
+    userEmail: string
+}
