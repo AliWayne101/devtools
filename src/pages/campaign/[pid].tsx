@@ -12,18 +12,30 @@ import { getSession } from 'next-auth/react'
 import { Web } from '@/Details'
 import axios from 'axios'
 import Loading from '@/components/Loading'
+import { ICampaigns } from '@/schemas/campaignInfo'
 
 const Index = ({ userDetails }: Props) => {
   const router = useRouter();
   const { pid } = router.query;
 
   const [isLoading, setIsLoading] = useState(true);
-
+  const [mountDoc, setMountDoc] = useState<ICampaigns>();
+  console.log(userDetails);
 
   useEffect(() => {
-    //Check if the PID exists, else redirect
-    //load the data in state 
-    
+    axios.get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${userDetails._sysID}`)
+      .then((response) => {
+        setIsLoading(false);
+        console.log(response.data);
+        setMountDoc(response.data.doc);
+        if (response.data.exists) {
+          setIsLoading(false);
+          setMountDoc(response.data.doc);
+        } else {
+          router.push('/dashboard');
+        }
+      })
+      .catch(err => console.log);
   }, [pid]);
 
   return (
@@ -38,9 +50,9 @@ const Index = ({ userDetails }: Props) => {
           <div className="font-fira size-small text-[var(--slate)]">
             <Link href={'/campaigns'} className='link'>Campaigns</Link> &gt; Campaign
           </div>
-          <div className="mainTitle mt-3 text-[var(--light-slate)] font-inter">Register</div>
+          <div className="mainTitle mt-3 text-[var(--light-slate)] font-inter">{mountDoc ? mountDoc.Name : "Loading.."}</div>
           <div className="text-[var(--slate)] flex">
-            <BiNetworkChart size={20} /> Example.com
+            <BiNetworkChart size={20} /> {mountDoc ? mountDoc.URL : "Loading.."}
           </div>
         </main>
       </div>
@@ -56,7 +68,7 @@ const Index = ({ userDetails }: Props) => {
           <Loading />
         ) : (
           <>
-            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
+            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] mb-20">
               <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--light-slate)]">
                 <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
                 <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger</div>
@@ -78,7 +90,6 @@ const Index = ({ userDetails }: Props) => {
 }
 
 export default Index;
-
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const session = await getSession(context);
