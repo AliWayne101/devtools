@@ -8,12 +8,13 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     if (req.query.action && req.query.target) {
-      const { action, target } = req.query;
+      const { action, target, userid } = req.query;
       Connect();
       if (action === "getcampaign") {
         campModel
           .find({
             selfID: target,
+            User: userid
           })
           .exec()
           .then((docs) => {
