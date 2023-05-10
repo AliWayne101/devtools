@@ -53,7 +53,7 @@ const Index = ({ userDetails }: Props) => {
           </div>
           <div className="mainTitle mt-3 text-[var(--light-slate)] font-inter">{mountDoc ? mountDoc.Name : "Loading.."}</div>
           <div className="text-[var(--slate)] flex">
-            <BiNetworkChart size={20} /> {mountDoc ? mountDoc.URL : "Loading.."}
+            <BiNetworkChart size={20} className='mr-2 mt-1' /> {mountDoc ? mountDoc.URL : "Loading.."}
           </div>
         </main>
       </div>

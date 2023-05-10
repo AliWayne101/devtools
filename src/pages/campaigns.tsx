@@ -6,7 +6,7 @@ import Footer from '@/sections/Footer';
 import Navbar from '@/sections/Navbar'
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
@@ -17,10 +17,10 @@ export interface Props {
   }
 }
 
-const Dashboard = ({ userDetails }: Props) => {
+const Campaigns = ({ userDetails }: Props) => {
 
   const [TotalCampaigns, setTotalCampaigns] = useState<ICampaigns[]>([]);
-  const { data: session } = useSession();
+
   useEffect(() => {
     axios
       .get(`/api/getdashboard?action=allcampaigns&target=${userDetails._sysID}`)
@@ -41,19 +41,15 @@ const Dashboard = ({ userDetails }: Props) => {
         <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
       </Head>
       <Navbar />
-      <Details camps={TotalCampaigns.length} notifs={0} imps={0} userDetails={userDetails} />
       <main>
-        <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
-          Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
-        </div>
-        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} />
+        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={10000} />
         <Footer />
       </main>
     </>
   )
 }
 
-export default Dashboard;
+export default Campaigns;
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const session = await getSession(context);
@@ -76,7 +72,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       if (response.data.exists) {
         if (response.data.confirmed)
           _sysID = response.data.sysID;
-        membership = response.data.membership;
+          membership = response.data.membership;
       } else {
         const resp2 = await axios.post(`${Web.Server}/api/userdetails`, {
           Email: session.user.email,

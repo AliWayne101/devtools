@@ -47,19 +47,28 @@ const Create = () => {
     }, [pid])
 
     const getEmailInfo = () => {
-        axios
-            .get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${session?.user?.email}`)
-            .then((response) => {
-                if (response.data.exists) {
-                    setCurrentCampaign(response.data.doc);
-                } else
-                    router.push('/dashboard');
-            })
-            .catch((err) => {
-                if (failCounts > 5)
-                    router.push('/dashboard');
-                else setFailCounts(failCounts + 1);
-            });
+        if (session && session.user) {
+            axios
+                .get(`/api/getcampaign?action=getemail&target=${pid}&email=${session.user.email}`)
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.data.exists) {
+                        setCurrentCampaign(response.data.doc);
+                    } else {
+                        router.push('/dashboard');
+                    }
+                })
+                .catch((err) => {
+                    if (failCounts > 5) {
+                        router.push('/dashboard');
+                    } else {
+                        const count = failCounts + 1;
+                        setFailCounts(count);
+                        getEmailInfo();
+                    }
+                });
+        } else 
+            router.push('/dashboard');
     }
 
     const NotificationType = (_Tag: string) => {
@@ -83,7 +92,7 @@ const Create = () => {
                     </div>
                     <div className="mainTitle mt-3 text-[var(--light-slate)] font-inter">Create a new notification</div>
                     <div className="text-[var(--slate)] flex">
-                        <BiNetworkChart size={20} /> {currentCampaign ? currentCampaign.URL : "Loading.."}
+                        <BiNetworkChart size={20} className='mr-2 mt-1' /> {currentCampaign ? currentCampaign.URL : "Loading.."}
                     </div>
                 </main>
             </div>
@@ -95,6 +104,9 @@ const Create = () => {
                     ) : (
                         isCompSelected ? (
                             <>
+                                <div className='w-full flex justify-center mainTitle items-center mt-5 mb-5 font-inter text-[var(--light-slate)]'>
+                                    Example
+                                </div>
                                 <div className='w-full flex justify-center items-center mt-5 mb-5'>
                                     {selectedComp}
                                 </div>
@@ -124,8 +136,3 @@ const Create = () => {
 }
 
 export default Create;
-
-
-interface DocProps {
-    userEmail: string
-}

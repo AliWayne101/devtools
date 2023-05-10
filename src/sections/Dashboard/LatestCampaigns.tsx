@@ -13,12 +13,13 @@ import Loading from '@/components/Loading'
 import { RiEdit2Fill } from 'react-icons/ri'
 import { Web } from '@/Details'
 
-const LatestCampaigns = ({ userDetails, CampData }: {
+const LatestCampaigns = ({ userDetails, CampData, Show }: {
     userDetails: {
         _sysID: string,
         Membership: string,
     },
-    CampData: ICampaigns[]
+    CampData: ICampaigns[],
+    Show: number
 }) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
@@ -153,10 +154,6 @@ const LatestCampaigns = ({ userDetails, CampData }: {
 
     return (
         <div className="w-full mb-20">
-            <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
-                Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
-            </div>
-
             {
                 showModal ? (
                     <>
@@ -223,7 +220,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                         <>
                             <div className='flex justify-between'>
                                 <div className="inter subTitle text-[var(--slate)]">
-                                    Latest Campaigns
+                                    { Show === 5 ? (<>Latest Campaigns</>) : (<>All Campaigns</>)}
                                 </div>
                                 <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
                             </div>
@@ -236,21 +233,23 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                                 </div>
                                 {
                                     recentCampaigns.map((data, index) => (
-                                        <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 font-fira text-[var(--slate)]">
-                                            <div className='pt-4 pb-4 pl-3 pr-2'>
-                                                <Link href={`/campaign/${data.selfID}`} className='text-ellipsis overflow-hidden' title={data.Name}>
-                                                    <span className="link mb-1 font-fira">{data.Name}</span>
-                                                </Link>
-                                                <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
+                                        index < Show && (
+                                            <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 font-fira text-[var(--slate)]">
+                                                <div className='pt-4 pb-4 pl-3 pr-2'>
+                                                    <Link href={`/campaign/${data.selfID}`} className='text-ellipsis overflow-hidden' title={data.Name}>
+                                                        <span className="link mb-1 font-fira">{data.Name}</span>
+                                                    </Link>
+                                                    <div className="mt-1 text-ellipsis overflow-hidden" title={data.URL}>{data.URL}</div>
+                                                </div>
+                                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex font-fira font-small'>{new Date(data.Tstamp).toLocaleDateString()} <br /> {new Date(data.Tstamp).toLocaleTimeString()} </div>
+                                                <div className='pt-4 pb-4 pl-2 pr-2 align-middle'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
+                                                <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)] align-middle'>
+                                                    <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
+                                                    <span onClick={() => EditCampaign(data.User, data.selfID)} className='cursor-pointer'><RiEdit2Fill size={20} title='Edit this campaign' /></span>
+                                                    <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={16} title='Delete this campaign' /></span>
+                                                </div>
                                             </div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex font-fira align-middle font-small'>{new Date(data.Tstamp).toLocaleDateString()}</div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 align-middle'><span onClick={() => changeStatus(data.isActive, data.URL)}><Toggle isEnabled={data.isActive} /></span></div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 grid grid-cols-3 gap-2 text-[var(--theme-color)] align-middle'>
-                                                <span onClick={() => InstallCampaign(data.User, data.selfID)} className='cursor-pointer'><FaCode size={20} title='Install code in your website' /></span>
-                                                <span onClick={() => EditCampaign(data.User, data.selfID)} className='cursor-pointer'><RiEdit2Fill size={20} title='Edit this campaign' /></span>
-                                                <span onClick={() => DeleteCampaign(data.User, data.selfID)} className='cursor-pointer'><FaTrash size={16} title='Delete this campaign' /></span>
-                                            </div>
-                                        </div>
+                                        )
                                     ))
 
                                 }
@@ -260,22 +259,29 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                 )
             }
 
+            {
+                Show === 5 && (
+                    <>
+                        <div className='flex inter subTitle text-[var(--slate)] mt-10'>
+                            Latest Notifications
+                        </div>
+                        <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
+                            <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--light-slate)]">
+                                <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Duration</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
+                            </div>
+                            <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]">
 
-            <div className='flex inter subTitle text-[var(--slate)] mt-10'>
-                Latest Notifications
-            </div>
-            <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
-                <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--light-slate)]">
-                    <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Duration</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
-                    <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
-                </div>
-                <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]">
+                            </div>
+                        </div>
+                    </>
+                )
+            }
 
-                </div>
-            </div>
+
         </div>
     )
 }
