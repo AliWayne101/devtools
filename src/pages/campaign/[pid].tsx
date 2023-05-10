@@ -32,7 +32,8 @@ const Index = ({ userDetails }: Props) => {
           setIsLoading(false);
           setMountDoc(response.data.doc);
         } else {
-          router.push('/dashboard');
+          //router.push('/dashboard');
+          console.log('Not found');
         }
       })
       .catch(err => console.log);
