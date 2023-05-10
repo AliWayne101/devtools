@@ -47,25 +47,21 @@ const Create = () => {
     }, [pid])
 
     const getEmailInfo = () => {
-        axios
-        .get(`/api/getcampaign?action=getemail&target=${pid}`)
-        .then((response) => {
-            if (response.data.exists) {
-                if (session && session.user) {
-                    if (response.data.email !== session.user.email)
-                        router.push('/dashboard');
-                    else
+        if (session && session.user) {
+            axios
+                .get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${session.user.email}`)
+                .then((response) => {
+                    if (response.data.exists) {
                         setCurrentCampaign(response.data.doc);
-                } else
-                    router.push('/dashboard');
-            } else
-                router.push('/dashboard');
-        })
-        .catch((err) => {
-            if (failCounts > 5)
-                router.push('/dashboard');
-            else setFailCounts(failCounts + 1);
-        });
+                    } else
+                        router.push('/dashboard');
+                })
+                .catch((err) => {
+                    if (failCounts > 5)
+                        router.push('/dashboard');
+                    else setFailCounts(failCounts + 1);
+                });
+        }
     }
 
     const NotificationType = (_Tag: string) => {
