@@ -20,6 +20,7 @@ const Create = () => {
     const [isCompSelected, setIsCompSelected] = useState(false);
     const [startCreating, setStartCreating] = useState(false);
     const [currentCampaign, setCurrentCampaign] = useState<ICampaigns>();
+    const [failCounts, setFailCounts] = useState(0);
     const { data: session } = useSession();
     const weProvide = [
         {
@@ -42,24 +43,30 @@ const Create = () => {
     ];
 
     useEffect(() => {
+        getEmailInfo();
+    }, [pid])
+
+    const getEmailInfo = () => {
         axios
-            .get(`/api/getcampaign?action=getemail&target=${pid}`)
-            .then((response) => {
-                if (response.data.exists) {
-                    if (session && session.user) {
-                        if (response.data.email !== session.user.email)
-                            router.push('/dashboard');
-                        else
-                            setCurrentCampaign(response.data.doc);
-                    } else
+        .get(`/api/getcampaign?action=getemail&target=${pid}`)
+        .then((response) => {
+            if (response.data.exists) {
+                if (session && session.user) {
+                    if (response.data.email !== session.user.email)
                         router.push('/dashboard');
+                    else
+                        setCurrentCampaign(response.data.doc);
                 } else
                     router.push('/dashboard');
-            })
-            .catch((err) => {
+            } else
                 router.push('/dashboard');
-            })
-    }, [pid])
+        })
+        .catch((err) => {
+            if (failCounts > 5)
+                router.push('/dashboard');
+            else setFailCounts(failCounts + 1);
+        });
+    }
 
     const NotificationType = (_Tag: string) => {
         const curComp = components[componentIndex[_Tag]];

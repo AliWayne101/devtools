@@ -26,14 +26,12 @@ const Index = ({ userDetails }: Props) => {
       axios.get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${userDetails._sysID}`)
         .then((response) => {
           setIsLoading(false);
-          console.log(response.data);
           setMountDoc(response.data.doc);
           if (response.data.exists) {
             setIsLoading(false);
             setMountDoc(response.data.doc);
           } else {
-            //router.push('/dashboard');
-            console.log('Not found');
+            router.push('/dashboard');
           }
         })
         .catch(err => console.log);
