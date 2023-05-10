@@ -8,6 +8,7 @@ export interface ICampaigns {
   User: string;
   isActive: boolean;
   selfID: string;
+  Email: string;
 }
 
 const Campaigns = new Schema({
@@ -21,6 +22,7 @@ const Campaigns = new Schema({
   User: String,
   isActive: Boolean,
   selfID: String,
+  Email: String,
 });
 
 let campModel: Model<ICampaigns>;

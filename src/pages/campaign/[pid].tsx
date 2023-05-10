@@ -42,6 +42,7 @@ const Index = ({ userDetails }: Props) => {
     <>
       <Head>
         <title>Campaign - DevTools</title>
+        <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
       </Head>
       <Navbar />
 

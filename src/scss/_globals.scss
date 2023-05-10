@@ -99,3 +99,20 @@ main {
 .subTitle {
   font-size: var(--tmed);
 }
+
+.service-grid {
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+    border: 1px solid var(--theme-color);
+  }
+}
+
+.previewSize {
+  width: 600px;
+}
+
+.mobilePreview {
+  width: 600px;
+}

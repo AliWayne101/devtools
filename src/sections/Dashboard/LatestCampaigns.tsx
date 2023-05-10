@@ -86,23 +86,26 @@ const LatestCampaigns = ({ userDetails, CampData }: {
     }
 
     const AddWebsite = () => {
-        if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
-            if (addWebDetails.URL.includes('.')) {
-                setIsCreatingCamp(true);
-                axios
-                    .get(`/api/getdashboard?action=addcampaign&target=${addWebDetails.URL}&campname=${addWebDetails.Name}&user=${userDetails._sysID}`)
-                    .then((response) => {
-                        if (response.data.created) {
-                            refreshCampaignData();
-                        } else {
-                            console.log(response.data);
-                        }
-                    })
-                    .catch(err => console.log);
+        if (session && session.user) {
+            if (addWebDetails.Name.length > 0 && addWebDetails.URL.length > 0) {
+                if (addWebDetails.URL.includes('.')) {
+                    setIsCreatingCamp(true);
+                    axios
+                        .get(`/api/getdashboard?action=addcampaign&target=${addWebDetails.URL}&campname=${addWebDetails.Name}&user=${userDetails._sysID}&email=${session.user.email}`)
+                        .then((response) => {
+                            if (response.data.created) {
+                                refreshCampaignData();
+                            } else {
+                                console.log(response.data);
+                            }
+                        })
+                        .catch(err => console.log);
+                } else
+                    setErrorMsg('Invalid website address');
             } else
-                setErrorMsg('Invalid website address');
+                setErrorMsg('Please make sure all the fields are filled.');
         } else
-            setErrorMsg('Please make sure all the fields are filled.');
+            setErrorMsg('Please try again..');
     }
 
     const handleChange = (e: HTMLInputElement) => {
@@ -127,6 +130,7 @@ const LatestCampaigns = ({ userDetails, CampData }: {
                     isActive: newState,
                     User: doc.User,
                     selfID: doc.selfID,
+                    Email: session?.user?.email || "email"
                 }
                 newDocs.push(mockDoc);
                 targetID = doc._id;

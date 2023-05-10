@@ -1,0 +1,62 @@
+.devToolsBox {
+  background-color: whitesmoke;
+  height: 240px;
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.closingButton {
+  cursor: pointer;
+}
+
+.hide {
+  display: none;
+}
+
+.dt_container_head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dt_container_head {
+  b {
+    font-size: 20px;
+  }
+}
+
+.dt_container_head {
+  span {
+    font-size: 12px;
+  }
+}
+
+.dt_container_body {
+  p {
+    font-size: 12px !important;
+    padding: 10px 0px;
+  }
+  input {
+    padding: 5px !important;
+    width: 45% !important;
+    font-size: 16px;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  button {
+    margin-top: 10px !important;
+    width: 100% !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    cursor: pointer;
+    background-color: var(--primary);
+    color: white;
+  }
+}
+
+.dt_copyright {
+  font-size: 12px;
+  margin-top: 10px;
+}

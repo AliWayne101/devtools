@@ -36,7 +36,7 @@ export default async function handler(
           res.status(200).json({ found: false, error: err });
         });
     } else if (action === "addcampaign") {
-      let { campname, user } = req.query;
+      let { campname, user, email } = req.query;
       campModel
         .create({
           _id: new mongoose.Types.ObjectId(),
@@ -44,13 +44,29 @@ export default async function handler(
           Name: campname,
           URL: target,
           User: user,
-          selfID: generateID(10)
+          selfID: generateID(10),
+          Email: email,
         })
         .then((doc) => {
           res.status(200).json({ created: true });
         })
         .catch((err) => {
           res.status(200).json({ created: false });
+        });
+    } else if (action === "getemail") {
+      campModel
+        .find({ selfID: target })
+        .exec()
+        .then((docs) => {
+          if (docs.length > 0) {
+            res
+              .status(200)
+              .json({ exists: true, email: docs[0].Email, doc: docs[0] });
+          } else
+            res.status(200).json({ exists: false, email: null, doc: null });
+        })
+        .catch((err) => {
+          res.status(200).json({ exists: false, email: null, error: err });
         });
     }
   }
