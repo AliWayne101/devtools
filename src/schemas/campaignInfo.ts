@@ -1,4 +1,4 @@
-import { Document, Model, Schema, model, Types } from "mongoose";
+import { Model, Schema, model, Types } from "mongoose";
 
 export interface ICampaigns {
   _id: Types.ObjectId;

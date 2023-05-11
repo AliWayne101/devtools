@@ -41,7 +41,7 @@ export default async function handler(
             if (docs.length > 0) {
               res
                 .status(200)
-                .json({ exists: true, doc: docs[0], error: false });
+                .json({ exists: true, doc: docs[0], user: docs[0].User, error: false });
             } else
               res.status(200).json({ exists: false, doc: null, error: false });
           })

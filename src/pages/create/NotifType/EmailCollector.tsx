@@ -5,8 +5,11 @@ import { TbActivity } from 'react-icons/tb';
 import { BsDatabase } from 'react-icons/bs';
 import Button from '@/components/Button';
 import Toggle from '@/components/Toggle';
+import axios from 'axios';
+import { notifHelp } from '@/Details';
+import mongoose from 'mongoose';
 
-const EmailCollector = () => {
+const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -17,6 +20,11 @@ const EmailCollector = () => {
     const getDivClassname = (index: number) => {
         return `cursor-pointer p-3 flex ${activeIndex === index ? 'bg-gray-200 rounded rounded-[20px]' : 'text-[var(--slate)]'}`;
     }
+
+    const [externalData, setExternalData] = useState({
+        campignID: campignID,
+        userID: userID
+    });
 
     const [basicData, setBasicData] = useState({
         notifName: "My new notification",
@@ -92,6 +100,25 @@ const EmailCollector = () => {
         } else if (trigger === "Mouse Click" || trigger === "Mouse Hover") {
             return "CSS Selector: #id or .class of the element";
         }
+    }
+    const Create = async () => {
+        const data = {
+            _id: new mongoose.Types.ObjectId(),
+            ...basicData,
+            ...triggersData,
+            ...displayData,
+            ...customizeData,
+            ...dataData,
+            CampaignID: externalData.campignID,
+            User: externalData.userID,
+        };
+
+
+        axios.post(`/api/notifications`, data)
+            .then((response) => {
+                if (response.data.created)
+                onCompleted(true);
+            }).catch(err => console.log);
     }
 
     return (
@@ -181,7 +208,7 @@ const EmailCollector = () => {
                             </div>
 
                             <div className="mt-4">
-                                <span><Button name="Create" href="null" /></span>
+                                <span onClick={() => Create()}><Button name="Create" href="null" /></span>
                             </div>
                         </>
                     ) : activeIndex === 1 ? (

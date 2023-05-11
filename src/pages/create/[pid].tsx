@@ -13,7 +13,6 @@ import { BiNetworkChart } from 'react-icons/bi'
 import { MdEmail } from 'react-icons/md'
 import EmailCollector from './NotifType/EmailCollector'
 
-
 const Create = () => {
     const router = useRouter();
     const { pid } = router.query;
@@ -24,6 +23,7 @@ const Create = () => {
     const [failCounts, setFailCounts] = useState(0);
     const [selectedTitle, setSelectedTitle] = useState("null");
     const { data: session } = useSession();
+    const [curUserID, setCurUserID] = useState('');
     const weProvide = [
         {
             Icon: <MdEmail size={18} className='w-full block items-center text-[var(--light-slate)]' />,
@@ -55,6 +55,7 @@ const Create = () => {
                 .then((response) => {
                     if (response.data.exists) {
                         setCurrentCampaign(response.data.doc);
+                        setCurUserID(response.data.user);
                     } else {
                         router.push('/dashboard');
                     }
@@ -77,6 +78,10 @@ const Create = () => {
         setSelectedComp(curComp);
         setIsCompSelected(true);
         setSelectedTitle(Title);
+    }
+
+    const NotifCreated = (status: boolean) => {
+        router.push(`/campaign/${pid}`);
     }
 
     return (
@@ -103,7 +108,7 @@ const Create = () => {
                 {
                     startCreating ? (
                         selectedTitle === "Email Collector" ?
-                            <EmailCollector />
+                            <EmailCollector campignID={typeof pid === "string" ? pid : "null"} userID={curUserID} onCompleted={NotifCreated} />
                             : ""
                     ) : (
                         isCompSelected ? (

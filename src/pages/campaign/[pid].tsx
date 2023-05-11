@@ -13,6 +13,9 @@ import { Web } from '@/Details'
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import { ICampaigns } from '@/schemas/campaignInfo'
+import { INotification } from '@/schemas/notifInfo'
+import Toggle from '@/components/Toggle'
+import { FaTrash } from 'react-icons/fa'
 
 const Index = ({ userDetails }: Props) => {
   const router = useRouter();
@@ -20,15 +23,13 @@ const Index = ({ userDetails }: Props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [mountDoc, setMountDoc] = useState<ICampaigns>();
-  
+  const [allNotifs, setAllNotifs] = useState<INotification[]>([]);
+
   useEffect(() => {
     if (pid) {
       axios.get(`/api/getcampaign?action=getcampaign&target=${pid}&userid=${userDetails._sysID}`)
         .then((response) => {
-          setIsLoading(false);
-          setMountDoc(response.data.doc);
           if (response.data.exists) {
-            setIsLoading(false);
             setMountDoc(response.data.doc);
           } else {
             router.push('/dashboard');
@@ -37,6 +38,51 @@ const Index = ({ userDetails }: Props) => {
         .catch(err => console.log);
     }
   }, [pid]);
+
+  useEffect(() => {
+    axios.get(`/api/notifications?action=getallnotifs&target=${pid}`)
+      .then((response) => {
+        if (response.data.exists) {
+          setIsLoading(false);
+          setAllNotifs(response.data.docs);
+        }
+      })
+      .catch(err => console.log);
+  }, [mountDoc]);
+
+  const ChangeActive = (ID: string, newStatus: boolean) => {
+    const newDocs: INotification[] = [];
+    allNotifs.map((data) => {
+      if (data._id === ID) {
+        let currentNotif: INotification = allNotifs.find(({ _id }) => _id === ID)!;
+        if (currentNotif)
+          currentNotif.Active = newStatus;
+        newDocs.push(currentNotif);
+      } else
+        newDocs.push(data);
+    });
+    setAllNotifs(newDocs);
+    axios.get(`/api/notifications?action=setactivity&target=${ID}&newStatus=${newStatus}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(err => console.log);
+  }
+
+  const DeleteNotif = (ID: string, User: string) => {
+    const newDocs: INotification[] = [];
+    allNotifs.map((data) => {
+      if (data._id !== ID)
+        newDocs.push(data);
+    });
+
+    setAllNotifs(newDocs);
+    axios.get(`/api/notifications?action=deletenotif&target=${ID}&user=${User}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(err => console.log);
+  }
 
   return (
     <>
@@ -72,14 +118,28 @@ const Index = ({ userDetails }: Props) => {
             <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px] mb-20">
               <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--light-slate)]">
                 <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
-                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger</div>
+                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger Delay</div>
                 <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Duration</div>
                 <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
               </div>
-              <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]">
-
-              </div>
+              {allNotifs &&
+                allNotifs.map((data, index) => (
+                  <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]" key={index}>
+                    <div className='pt-4 pb-4 pl-3 pr-2'>{data.notifName}</div>
+                    <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.triggerValue} Seconds</div>
+                    <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.displayDuration} Seconds</div>
+                    <div className='pt-4 pb-4 pl-2 pr-2'>
+                      <span onClick={() => ChangeActive(data._id, !data.Active)} >
+                        <Toggle isEnabled={data.Active} />
+                      </span>
+                    </div>
+                    <div className='pt-4 pb-4 pl-2 pr-2'>
+                      <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
+                    </div>
+                  </div>
+                ))
+              }
             </div>
           </>
         )}

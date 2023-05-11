@@ -1,5 +1,6 @@
 import { Web } from '@/Details';
 import { ICampaigns } from '@/schemas/campaignInfo';
+import { INotification } from '@/schemas/notifInfo';
 import Details from '@/sections/Dashboard/Details';
 import LatestCampaigns from '@/sections/Dashboard/LatestCampaigns';
 import Footer from '@/sections/Footer';
@@ -20,6 +21,7 @@ export interface Props {
 const Dashboard = ({ userDetails }: Props) => {
 
   const [TotalCampaigns, setTotalCampaigns] = useState<ICampaigns[]>([]);
+  const [TotalNotifs, setTotalNotifs] = useState<INotification[]>([]);
   const { data: session } = useSession();
   useEffect(() => {
     axios
@@ -32,6 +34,19 @@ const Dashboard = ({ userDetails }: Props) => {
         }
       })
       .catch(err => console.log)
+
+      axios
+      .get(`/api/notifications?action=getsomenotifs&target=${userDetails._sysID}`)
+      .then((response) => {
+        if (response.data.exists) {
+          setTotalNotifs(response.data.docs);
+        } else {
+          console.log(response.data.error);
+        }
+      })
+      .catch(err => console.log)
+      
+
   }, []);
 
   return (
@@ -46,7 +61,7 @@ const Dashboard = ({ userDetails }: Props) => {
         <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
           Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
         </div>
-        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} />
+        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} NotifData={TotalNotifs}/>
         <Footer />
       </main>
     </>

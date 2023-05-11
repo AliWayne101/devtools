@@ -12,14 +12,16 @@ import { Tier, iTier } from '@/Details'
 import Loading from '@/components/Loading'
 import { RiEdit2Fill } from 'react-icons/ri'
 import { Web } from '@/Details'
+import { INotification } from '@/schemas/notifInfo'
 
-const LatestCampaigns = ({ userDetails, CampData, Show }: {
+const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
     userDetails: {
         _sysID: string,
         Membership: string,
     },
     CampData: ICampaigns[],
-    Show: number
+    Show: number,
+    NotifData: INotification[]
 }) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
     const [addWebDetails, setAddWebDetails] = useState({
@@ -28,6 +30,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show }: {
     });
     const [errorMsg, setErrorMsg] = useState('');
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
+    const [recentNotifications, setRecentNotifications] = useState<INotification[]>(NotifData);
     const [membership, setMembership] = useState<iTier>();
     const [isCreatingCamp, setIsCreatingCamp] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -43,6 +46,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show }: {
 
     useEffect(() => {
         setRecentCampaigns(CampData);
+        setRecentNotifications(NotifData);
     }, [CampData])
 
     const DeleteCampaign = (UserID: string, CampaignID: string) => {
@@ -152,6 +156,41 @@ const LatestCampaigns = ({ userDetails, CampData, Show }: {
         }
     }
 
+
+    const ChangeActive = (ID: string, newStatus: boolean) => {
+        const newDocs: INotification[] = [];
+        recentNotifications.map((data) => {
+            if (data._id === ID) {
+                let currentNotif: INotification = recentNotifications.find(({ _id }) => _id === ID)!;
+                if (currentNotif)
+                    currentNotif.Active = newStatus;
+                newDocs.push(currentNotif);
+            } else
+                newDocs.push(data);
+        });
+        setRecentNotifications(newDocs);
+        axios.get(`/api/notifications?action=setactivity&target=${ID}&newStatus=${newStatus}`)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch(err => console.log);
+    }
+
+    const DeleteNotif = (ID: string, User: string) => {
+        const newDocs: INotification[] = [];
+        recentNotifications.map((data) => {
+            if (data._id !== ID)
+                newDocs.push(data);
+        });
+
+        setRecentNotifications(newDocs);
+        axios.get(`/api/notifications?action=deletenotif&target=${ID}&user=${User}`)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch(err => console.log);
+    }
+
     return (
         <div className="w-full mb-20">
             {
@@ -220,7 +259,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show }: {
                         <>
                             <div className='flex justify-between'>
                                 <div className="inter subTitle text-[var(--slate)]">
-                                    { Show === 5 ? (<>Latest Campaigns</>) : (<>All Campaigns</>)}
+                                    {Show === 5 ? (<>Latest Campaigns</>) : (<>All Campaigns</>)}
                                 </div>
                                 <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
                             </div>
@@ -268,14 +307,28 @@ const LatestCampaigns = ({ userDetails, CampData, Show }: {
                         <div className="w-full mt-5 bg-secondary2 rounded rounded-[10px]">
                             <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--light-slate)]">
                                 <div className='pt-4 pb-4 pl-3 pr-2'>Name</div>
-                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger</div>
+                                <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Trigger Delay</div>
                                 <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>Duration</div>
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Status</div>
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                             </div>
-                            <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]">
-
-                            </div>
+                            {recentNotifications &&
+                                recentNotifications.map((data, index) => (
+                                    <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]" key={index}>
+                                        <div className='pt-4 pb-4 pl-3 pr-2'>{data.notifName}</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.triggerValue} Seconds</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.displayDuration} Seconds</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2'>
+                                            <span onClick={() => ChangeActive(data._id, !data.Active)} >
+                                                <Toggle isEnabled={data.Active} />
+                                            </span>
+                                        </div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2'>
+                                            <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
+                                        </div>
+                                    </div>
+                                ))
+                            }
                         </div>
                     </>
                 )

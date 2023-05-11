@@ -34,3 +34,10 @@ export const generateID = (length: number) => {
   }
   return result;
 };
+
+
+export type notifHelp = {
+  campignID: string,
+  userID: string,
+  onCompleted: (status: boolean) => void;
+}
