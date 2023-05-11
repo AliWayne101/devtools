@@ -179,38 +179,38 @@ const Create = () => {
                                     {activeIndex === 0 ? (
                                         <>
                                         <div className="text-[var(--slate)] font-inter mt-1">
-                                            <div>Notification</div>
-                                            <input type="text" name="notifName" value={basicData.notifName} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <div>Notification Name</div>
+                                            <input type="text" name="notifName" value={basicData.notifName} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                         </div>
                                         
                                         <div className="text-[var(--slate)] font-inter mt-3">
                                             <div>Title Message</div>
-                                            <input type="text" name="notifTitle" value={basicData.notifTitle} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <input type="text" name="notifTitle" value={basicData.notifTitle} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                         </div>
                                         
                                         <div className="text-[var(--slate)] font-inter mt-3">
                                             <div>Description Message</div>
-                                            <input type="text" name="notifDesc" value={basicData.notifDesc} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <input type="text" name="notifDesc" value={basicData.notifDesc} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                         </div>
                                         
                                         <div className="text-[var(--slate)] font-inter mt-3">
                                             <div>Name Placeholder</div>
-                                            <input type="text" name="notifNPlaceholder" value={basicData.notifNPlaceholder} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <input type="text" name="notifNPlaceholder" value={basicData.notifNPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                         </div>
                                         
                                         <div className="text-[var(--slate)] font-inter mt-3">
                                             <div>Email Placeholder</div>
-                                            <input type="text" name="notifEPlaceholder" value={basicData.notifEPlaceholder} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <input type="text" name="notifEPlaceholder" value={basicData.notifEPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                         </div>
                                         
                                         <div className="text-[var(--slate)] font-inter mt-3">
                                             <div>Button Text</div>
-                                            <input type="text" name="notifButton" value={basicData.notifButton} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                         </div>
                                         
                                         <div className="text-[var(--slate)] font-inter mt-3">
                                             <div>Success Redirect (URL)</div>
-                                            <input type="text" name="notifButton" value={basicData.notifButton} className="p-2 w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                            <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                             <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
                                         </div>
                                         
