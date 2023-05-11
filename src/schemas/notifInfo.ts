@@ -27,6 +27,7 @@ export interface INotification {
   Tstamp: Date;
   User: string;
   Active: boolean;
+  Impression: number;
 }
 
 const NotificationSchema = new Schema<INotification>({
@@ -55,7 +56,8 @@ const NotificationSchema = new Schema<INotification>({
   CampaignID: { type: String },
   Tstamp: { type: Date, default: Date.now },
   User: { type: String },
-  Active: { type: Boolean, default: true }
+  Active: { type: Boolean, default: true },
+  Impression: { type: Number, default: 0 },
 });
 
 let NotifModel: Model<INotification>;

@@ -45,7 +45,6 @@ export default async function handler(
       } else if (action === "getsomenotifs") {
         NotifModel.find({ User: target })
           .sort({ Tstamp: -1 })
-          .limit(5)
           .exec()
           .then((docs) => {
             res.status(200).json({ exists: true, docs: docs });

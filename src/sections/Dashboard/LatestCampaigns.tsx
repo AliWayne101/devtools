@@ -313,21 +313,23 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                                 <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                             </div>
                             {recentNotifications &&
-                                recentNotifications.map((data, index) => (
-                                    <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]" key={index}>
-                                        <div className='pt-4 pb-4 pl-3 pr-2'>{data.notifName}</div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.triggerValue} Seconds</div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.displayDuration} Seconds</div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2'>
-                                            <span onClick={() => ChangeActive(data._id, !data.Active)} >
-                                                <Toggle isEnabled={data.Active} />
-                                            </span>
+                                recentNotifications.map((data, index) =>
+                                    index < Show && (
+                                        <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]" key={index}>
+                                            <div className='pt-4 pb-4 pl-3 pr-2'>{data.notifName}</div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.triggerValue} Seconds</div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.displayDuration} Seconds</div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2'>
+                                                <span onClick={() => ChangeActive(data._id, !data.Active)} >
+                                                    <Toggle isEnabled={data.Active} />
+                                                </span>
+                                            </div>
+                                            <div className='pt-4 pb-4 pl-2 pr-2'>
+                                                <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
+                                            </div>
                                         </div>
-                                        <div className='pt-4 pb-4 pl-2 pr-2'>
-                                            <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
-                                        </div>
-                                    </div>
-                                ))
+                                    )
+                                )
                             }
                         </div>
                     </>

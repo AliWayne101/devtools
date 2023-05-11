@@ -22,6 +22,7 @@ const Dashboard = ({ userDetails }: Props) => {
 
   const [TotalCampaigns, setTotalCampaigns] = useState<ICampaigns[]>([]);
   const [TotalNotifs, setTotalNotifs] = useState<INotification[]>([]);
+  const [TotalImpression, setTotalImpression] = useState(0);
   const { data: session } = useSession();
   useEffect(() => {
     axios
@@ -49,6 +50,14 @@ const Dashboard = ({ userDetails }: Props) => {
 
   }, []);
 
+  useEffect(() => {
+    let impressions = 0;
+    TotalNotifs.map((data) => {
+      impressions += data.Impression;
+    });
+    setTotalImpression(impressions);
+  }, [TotalNotifs])
+
   return (
     <>
       <Head>
@@ -56,7 +65,7 @@ const Dashboard = ({ userDetails }: Props) => {
         <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
       </Head>
       <Navbar />
-      <Details camps={TotalCampaigns.length} notifs={0} imps={0} userDetails={userDetails} />
+      <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={TotalImpression} userDetails={userDetails} />
       <main>
         <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
           Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
