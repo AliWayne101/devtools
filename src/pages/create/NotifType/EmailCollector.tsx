@@ -104,6 +104,7 @@ const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
     const Create = async () => {
         const data = {
             _id: new mongoose.Types.ObjectId(),
+            NotifType: "Email Collector",
             ...basicData,
             ...triggersData,
             ...displayData,

@@ -28,6 +28,7 @@ export interface INotification {
   User: string;
   Active: boolean;
   Impression: number;
+  NotifType: string;
 }
 
 const NotificationSchema = new Schema<INotification>({
@@ -58,6 +59,7 @@ const NotificationSchema = new Schema<INotification>({
   User: { type: String },
   Active: { type: Boolean, default: true },
   Impression: { type: Number, default: 0 },
+  NotifType: { type: String },
 });
 
 let NotifModel: Model<INotification>;
