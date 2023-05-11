@@ -1,4 +1,5 @@
 import { Web } from '@/Details';
+import Loading from '@/components/Loading';
 import { ICampaigns } from '@/schemas/campaignInfo';
 import { INotification } from '@/schemas/notifInfo';
 import Details from '@/sections/Dashboard/Details';
@@ -23,6 +24,7 @@ const Dashboard = ({ userDetails }: Props) => {
   const [TotalCampaigns, setTotalCampaigns] = useState<ICampaigns[]>([]);
   const [TotalNotifs, setTotalNotifs] = useState<INotification[]>([]);
   const [TotalImpression, setTotalImpression] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { data: session } = useSession();
   useEffect(() => {
     axios
@@ -30,6 +32,7 @@ const Dashboard = ({ userDetails }: Props) => {
       .then((response) => {
         if (response.data.found) {
           setTotalCampaigns(response.data.docs);
+          setIsLoading(false);
         } else {
           console.log(response.data.error);
         }
@@ -65,12 +68,17 @@ const Dashboard = ({ userDetails }: Props) => {
         <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
       </Head>
       <Navbar />
-      <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={TotalImpression} userDetails={userDetails} />
+      { isLoading === false && (
+        <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={TotalImpression} userDetails={userDetails} />
+      )}
       <main>
         <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
           Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
         </div>
-        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} NotifData={TotalNotifs}/>
+        { isLoading ? <Loading /> : (
+          <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} NotifData={TotalNotifs}/>
+        )}
+        
         <Footer />
       </main>
     </>
