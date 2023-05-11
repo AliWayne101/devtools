@@ -8,11 +8,10 @@ import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { ChangeEventHandler, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiNetworkChart } from 'react-icons/bi'
-import { FaCog, FaPaintBrush } from 'react-icons/fa'
-import { MdEmail, MdMonitor } from 'react-icons/md'
-import { TbActivity } from 'react-icons/tb'
+import { MdEmail } from 'react-icons/md'
+import EmailCollector from './NotifType/EmailCollector'
 
 
 const Create = () => {
@@ -44,32 +43,6 @@ const Create = () => {
         },
 
     ];
-
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const handleDivClick = (index: number) => {
-        setActiveIndex(index);
-    }
-
-    const getDivClassname = (index: number) => {
-        return `cursor-pointer p-3 flex ${activeIndex === index ? 'bg-gray-200 rounded rounded-[20px]' : 'text-[var(--slate)]'}`;
-    }
-
-    const [basicData, setBasicData] = useState({
-        notifName: "My new notification",
-        notifTitle: "Weekly newsletter",
-        notifDesc: "We do not send out spam emails & you can unsubscribe at any point.",
-        notifNPlaceholder: "Your name",
-        notifEPlaceholder: "Your email",
-        notifButton: "Sign me up",
-        notifRedirect: ""
-    });
-
-    const updateBasic = (e: HTMLInputElement) => {
-        setBasicData({
-            ...basicData, [e.name]: e.value
-        });
-    }
 
     useEffect(() => {
         getEmailInfo();
@@ -129,102 +102,9 @@ const Create = () => {
 
                 {
                     startCreating ? (
-                        <div className="w-full mb-10">
-                            <div className="grid grid-cols-1 sm:grid-cols-2">
-                                <div className='mb-10 flex items-center'>
-                                    <div className="mainTitle text-[var(--light-slate)] font-inter ml-2 ">Preview</div>
-                                </div>
-                                <div className="flex justify-end items-end mb-10">
-
-                                    <div className="devToolsBox">
-                                        <div className='dt_container_head'>
-                                            <b>{basicData.notifTitle}</b>
-                                            <span className='closingButton' title='Close'>X</span>
-                                        </div>
-                                        <div className='dt_container_body'>
-                                            <p>{basicData.notifDesc}</p>
-                                            <div className='dt_inline_input'>
-                                                <input type="text" name="name" id="name" placeholder={basicData.notifNPlaceholder} />
-                                                <input type="email" name="email" id="email" placeholder={basicData.notifEPlaceholder} />
-                                            </div>
-                                            <button className='dt_button'>{basicData.notifButton}</button>
-                                            <div className='dt_copyright'>Powered by DevTools</div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div className="mainTitle font-inter text-[var(--slate)]">
-                                Settings
-                            </div>
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-                                <div className="col-span-1 mt-5 pb-5">
-                                    <div className={getDivClassname(0)} onClick={() => handleDivClick(0)}>
-                                        <FaCog size={20} className='mr-4 mt-1' /> Basic
-                                    </div>
-                                    <div className={getDivClassname(1)} onClick={() => handleDivClick(1)}>
-                                        <TbActivity size={20} className='mr-4 mt-1' /> Triggers
-                                    </div>
-                                    <div className={getDivClassname(2)} onClick={() => handleDivClick(2)}>
-                                        <MdMonitor size={20} className='mr-4 mt-1' /> Display
-                                    </div>
-                                    <div className={getDivClassname(3)} onClick={() => handleDivClick(3)}>
-                                        <FaPaintBrush size={20} className='mr-4 mt-1' /> Customize
-                                    </div>
-                                    <div className={getDivClassname(4)} onClick={() => handleDivClick(4)}>
-                                        <FaCog size={20} className='mr-4 mt-1' /> Data
-                                    </div>
-                                </div>
-                                <div className="col-span-3 mt-5 size-body">
-                                    {activeIndex === 0 ? (
-                                        <>
-                                        <div className="text-[var(--slate)] font-inter mt-1">
-                                            <div>Notification Name</div>
-                                            <input type="text" name="notifName" value={basicData.notifName} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        </div>
-                                        
-                                        <div className="text-[var(--slate)] font-inter mt-3">
-                                            <div>Title Message</div>
-                                            <input type="text" name="notifTitle" value={basicData.notifTitle} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        </div>
-                                        
-                                        <div className="text-[var(--slate)] font-inter mt-3">
-                                            <div>Description Message</div>
-                                            <input type="text" name="notifDesc" value={basicData.notifDesc} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        </div>
-                                        
-                                        <div className="text-[var(--slate)] font-inter mt-3">
-                                            <div>Name Placeholder</div>
-                                            <input type="text" name="notifNPlaceholder" value={basicData.notifNPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        </div>
-                                        
-                                        <div className="text-[var(--slate)] font-inter mt-3">
-                                            <div>Email Placeholder</div>
-                                            <input type="text" name="notifEPlaceholder" value={basicData.notifEPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        </div>
-                                        
-                                        <div className="text-[var(--slate)] font-inter mt-3">
-                                            <div>Button Text</div>
-                                            <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        </div>
-                                        
-                                        <div className="text-[var(--slate)] font-inter mt-3">
-                                            <div>Success Redirect (URL)</div>
-                                            <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                            <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
-                                        </div>
-                                        
-                                        <div className="mt-4">
-                                            <span><Button name="Create" href="null" /></span>
-                                        </div>
-                                        </>
-                                    ) : (
-                                        <p>Or is it?.</p>
-                                    )}
-                                </div>
-                            </div>
-
-                        </div>
+                        selectedTitle === "Email Collector" ?
+                            <EmailCollector />
+                            : ""
                     ) : (
                         isCompSelected ? (
                             <>
