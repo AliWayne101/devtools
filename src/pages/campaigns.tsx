@@ -42,7 +42,7 @@ const Campaigns = ({ userDetails }: Props) => {
       </Head>
       <Navbar />
       <main>
-        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={10000} />
+        <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={10000} NotifData={[]} />
         <Footer />
       </main>
     </>
