@@ -28,7 +28,7 @@
 }
 
 .bg-theme {
-    background-color: green;
+    background-color: var(--theme-color) !important;
 }
 
 .font-fira {

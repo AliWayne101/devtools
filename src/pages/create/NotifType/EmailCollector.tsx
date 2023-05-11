@@ -35,6 +35,24 @@ const EmailCollector = () => {
         triggerDisplayLarge: true
     });
 
+    const [displayData, setDisplayData] = useState({
+        displayDuration: 5,
+        displayPosition: "Bottom Right",
+        displayCloseButton: true
+    });
+
+    const [customizeData, setCustomizeData] = useState({
+        customizeTitle: "#000",
+        customizeDesc: "#000",
+        customizeBG: "#fff",
+        customizeButtonBG: "#272727",
+        customizeButtonText: "#fff"
+    });
+
+    const [dataData, setDataData] = useState({
+        dataSendData: false,
+        dataWebhook: ''
+    });
 
     const updateBasic = (e: HTMLInputElement) => {
         setBasicData({
@@ -45,6 +63,24 @@ const EmailCollector = () => {
     const updateTrigger = (e: HTMLInputElement) => {
         setTriggersData({
             ...triggersData, [e.name]: e.value
+        });
+    }
+
+    const updateDisplay = (e: HTMLInputElement) => {
+        setDisplayData({
+            ...displayData, [e.name]: e.value
+        });
+    }
+
+    const updateCustomize = (e: HTMLInputElement) => {
+        setCustomizeData({
+            ...customizeData, [e.name]: e.value
+        });
+    }
+
+    const updateData = (e: HTMLInputElement) => {
+        setDataData({
+            ...dataData, [e.name]: e.value
         });
     }
 
@@ -140,7 +176,7 @@ const EmailCollector = () => {
 
                             <div className="text-[var(--slate)] font-inter mt-3">
                                 <div>Success Redirect (URL)</div>
-                                <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                <input type="text" name="notifRedirect" value={basicData.notifRedirect} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                                 <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
                             </div>
 
@@ -183,10 +219,10 @@ const EmailCollector = () => {
                                 </div>
                                 <div className="pl-4">
                                     <div className="flex">
-                                    <FaMobile size={18} className='mr-2' /> Display on small devices
+                                        <FaMobile size={18} className='mr-2' /> Display on small devices
                                     </div>
                                     <p className='font-small'>
-                                    Whether or not to display the notification on when pixels available are smaller than 768px.
+                                        Whether or not to display the notification on when pixels available are smaller than 768px.
                                     </p>
                                 </div>
                             </div>
@@ -200,19 +236,89 @@ const EmailCollector = () => {
                                 </div>
                                 <div className="pl-4">
                                     <div className="flex">
-                                    <FaMobile size={18} className='mr-2' /> Display on large devices
+                                        <FaMobile size={18} className='mr-2' /> Display on large devices
                                     </div>
                                     <p className='font-small'>
-                                    Whether or not to display the notification on when pixels available are bigger than 768px.
+                                        Whether or not to display the notification on when pixels available are bigger than 768px.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                     ) : activeIndex === 2 ? (
-                        <p>Or is it?.</p>
+                        <>
+
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Display Duration</div>
+                                <input type="number" name="displayDuration" value={displayData.displayDuration} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateDisplay(e.target)} />
+                                <p className="font-small">Number of seconds to show the notification on your website, set to <b>-1</b> to display forever.</p>
+                            </div>
+
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <select name="displayPosition" className='w-full bg-transparent p-2 border border-1 font-small fira-code' value={displayData.displayPosition} onChange={(e) => {
+                                    setDisplayData({
+                                        ...displayData, [e.target.name]: e.target.value
+                                    });
+                                }}>
+                                    <option value="Top Left" className='bg-secondary'>Top Left</option>
+                                    <option value="Top Center" className='bg-secondary'>Top Center</option>
+                                    <option value="Top Right" className='bg-secondary'>Top Right</option>
+                                    <option value="Middle Left" className='bg-secondary'>Middle Left</option>
+                                    <option value="Middle Center" className='bg-secondary'>Middle Center</option>
+                                    <option value="Middle Right" className='bg-secondary'>Middle Right</option>
+                                    <option value="Bottom Left" className='bg-secondary'>Bottom Left</option>
+                                    <option value="Bottom Center" className='bg-secondary'>Bottom Center</option>
+                                    <option value="Bottom Right" className='bg-secondary'>Bottom Right</option>
+                                </select>
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-5">
+                                <span className="mr-3" onClick={() => {
+                                    setDisplayData({
+                                        ...displayData, displayCloseButton: !displayData.displayCloseButton
+                                    });
+                                }}><Toggle isEnabled={displayData.displayCloseButton} /></span> Display Closing Button
+                            </div>
+                        </>
+                    ) : activeIndex === 3 ? (
+                        <>
+
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Title Color</div>
+                                <input type="text" name="customizeTitle" value={customizeData.customizeTitle} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Description Color</div>
+                                <input type="text" name="customizeDesc" value={customizeData.customizeDesc} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Background Color</div>
+                                <input type="text" name="customizeBG" value={customizeData.customizeBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Button Background Color</div>
+                                <input type="text" name="customizeButtonBG" value={customizeData.customizeButtonBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Button Text Color</div>
+                                <input type="text" name="customizeButtonText" value={customizeData.customizeButtonText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                        </>
                     ) : (
-                        <div>This</div>
+                        <>
+
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <span className="mr-3" onClick={() => {
+                                    setDataData({
+                                        ...dataData, dataSendData: !dataData.dataSendData
+                                    });
+                                }} ><Toggle isEnabled={dataData.dataSendData} /></span> Send submitted data to external source
+                            </div>
+
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Webhook URL</div>
+                                <input type="text" name="dataWebhook" value={dataData.dataWebhook} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateData(e.target)} placeholder='Webhook URL to send the caught data back' disabled={!dataData.dataSendData} />
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
