@@ -8,5 +8,5 @@ export default async function handler (
     
     res.setHeader("Content-Type", "application/javascript");
     const ref = req.headers.referer;
-    res.status(200).send(`console.log(${ref});`);
+    res.status(200).send(`console.log('${ref}');`);
 }
