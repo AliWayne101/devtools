@@ -42,44 +42,41 @@ export default async function handler(
         const response = await campModel.find({ URL: plainAddr }).exec();
         if (response.length > 0) {
           if (response[0].isActive === true) {
-            NotifModel.find({ CampaignID: response[0].selfID })
-              .exec()
+            const newEntry = new EmailModel({
+              _id: new mongoose.Types.ObjectId(),
+              Name: name,
+              Email: email,
+              RefferingDomain: plainAddr,
+            });
+            newEntry
+              .save()
               .then((response) => {
-                const newEntry = new EmailModel({
-                  _id: new mongoose.Types.ObjectId(),
-                  Name: name,
-                  Email: email,
-                  RefferingDomain: plainAddr,
-                });
-                newEntry
-                  .save()
-                  .then((response) => {
-                    console.log(response);
-                    console.log("Email Registered");
-                  })
-                  .catch((err) => console.log(err));
-                if (response.length > 0) {
-                  if (response[0].dataSendData) {
-                    axios
-                      .post(response[0].dataWebhook, {
-                        Name: name,
-                        Email: email,
-                        RefDomain: targetAddr,
-                      })
-                      .then((e) => {
-                        console.log("Success");
-                        res.status(200).json({ registered: true });
-                      })
-                      .catch((e) => console.log(e));
-                  } else {
-                    res.status(200).json({ registered: true });
-                  }
-                }
+                console.log(response);
+                console.log("Email Registered");
               })
-              .catch((err) => {
-                console.log(err);
-                res.status(403).json({ system: "malfunction " });
-              });
+              .catch((err) => console.log(err));
+
+            const notifs = await NotifModel.find({
+              CampaignID: response[0].selfID,
+            }).exec();
+
+            if (notifs.length > 0) {
+              if (notifs[0].dataSendData) {
+                axios
+                  .post(notifs[0].dataWebhook, {
+                    Name: name,
+                    Email: email,
+                    RefDomain: targetAddr,
+                  })
+                  .then((e) => {
+                    console.log("Success");
+                    res.status(200).json({ registered: true });
+                  })
+                  .catch((e) => console.log(e));
+              } else {
+                res.status(200).json({ registered: true });
+              }
+            }
           } else {
             res.status(200).json("Invalid Action");
           }
