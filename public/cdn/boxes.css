@@ -15,7 +15,7 @@
 /* Email Collector Start */
 .emailCollectorBox {
   opacity: 0;
-  height: 200px !important;
+  height: auto;
   width: 400px !important;
   padding: 20px !important;
   font-family: "Poppins" !important;
@@ -39,6 +39,7 @@
 
 .dt_container_body p {
   font-size: 12px !important;
+  padding: 10px 0px;
 }
 
 .dt_container_body input {
