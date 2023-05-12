@@ -76,7 +76,8 @@ export default async function handler(
 
               innerAnimationEnd = `
               initialValue = initialValue - 15;
-              target.style['bottom'] =  initialValue + 'px';
+              const withStyle = initialValue + 'px';
+              target.style['bottom'] =  withStyle;
               `;
             }
 

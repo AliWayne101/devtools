@@ -21,6 +21,7 @@
   font-family: "Poppins" !important;
   border-radius: 10px;
   z-index: 100 !important;
+  position: fixed;
 }
 
 .dt_container_head {
