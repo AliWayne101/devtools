@@ -22,7 +22,6 @@ export default async function handler(
       const campaignsList = await campModel
         .find({ URL: plainAddr, User: first32, selfID: last10 })
         .exec();
-      console.log(campaignsList);
       if (campaignsList.length > 0) {
         const notifs = await NotifModel.find({
           CampaignID: campaignsList[0].selfID,
@@ -77,7 +76,6 @@ export default async function handler(
               initialValue = initialValue - 15;
               const withStyle = initialValue + 'px';
               target.style['bottom'] =  withStyle;
-              console.log(initialValue);
               `;
             }
 
@@ -107,7 +105,6 @@ export default async function handler(
               const DeltaTime = parseInt(data.triggerValue) * 1000;
               writeTrigger += `
                       setTimeout(() => {
-                        console.log('Showing now');
                         startShowing();
                       }, ${DeltaTime}); `;
             } else if (data.triggerType === "Exit Intent") {
