@@ -16,6 +16,7 @@ export interface Props {
   userDetails: {
     _sysID: string,
     Membership: string,
+    TotalImps: number,
   }
 }
 
@@ -39,7 +40,7 @@ const Dashboard = ({ userDetails }: Props) => {
       })
       .catch(err => console.log)
 
-      axios
+    axios
       .get(`/api/notifications?action=getsomenotifs&target=${userDetails._sysID}`)
       .then((response) => {
         if (response.data.exists) {
@@ -49,16 +50,12 @@ const Dashboard = ({ userDetails }: Props) => {
         }
       })
       .catch(err => console.log)
-      
+
 
   }, []);
 
   useEffect(() => {
-    let impressions = 0;
-    TotalNotifs.map((data) => {
-      impressions += data.Impression;
-    });
-    setTotalImpression(impressions);
+
   }, [TotalNotifs])
 
   return (
@@ -68,17 +65,17 @@ const Dashboard = ({ userDetails }: Props) => {
         <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
       </Head>
       <Navbar />
-      { isLoading === false && (
-        <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={TotalImpression} userDetails={userDetails} />
+      {isLoading === false && (
+        <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={userDetails.TotalImps} userDetails={userDetails} />
       )}
       <main>
         <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
           Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
         </div>
-        { isLoading ? <Loading /> : (
-          <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} NotifData={TotalNotifs.slice(0, 5)}/>
+        {isLoading ? <Loading /> : (
+          <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} NotifData={TotalNotifs.slice(0, 5)} />
         )}
-        
+
         <Footer />
       </main>
     </>
@@ -102,13 +99,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
   let _sysID = "null";
   let membership = "Free";
+  let totalImps = 0;
   if (session && session.user) {
     try {
       const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${session.user.email}`);
       if (response.data.exists) {
-        if (response.data.confirmed)
+        if (response.data.confirmed) {
           _sysID = response.data.sysID;
-        membership = response.data.membership;
+          membership = response.data.membership;
+          totalImps = response.data.monthlyImps;
+        }
       } else {
         const resp2 = await axios.post(`${Web.Server}/api/userdetails`, {
           Email: session.user.email,
@@ -128,7 +128,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     props: {
       userDetails: {
         _sysID: _sysID,
-        Membership: membership
+        Membership: membership,
+        TotalImps: totalImps
       }
     }
   }

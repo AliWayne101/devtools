@@ -50,7 +50,7 @@ export default async function handler(
                   .then((updated) => {
                     res
                       .status(200)
-                      .json({ confirmed: true, sysID: nSysID, exists: true, membership: updated ? updated.Membership : "Free"});
+                      .json({ confirmed: true, sysID: nSysID, exists: true, membership: updated ? updated.Membership : "Free", monthlyImps: updated ? updated.MonthtlyImpressions : 0 });
                   })
                   .catch((err) => {
                     res.status(200).json({

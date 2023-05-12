@@ -175,13 +175,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
   let _sysID = "null";
   let membership = "Free";
+  let totalImps = 0;
   if (session && session.user) {
     try {
       const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${session.user.email}`);
       if (response.data.exists) {
-        if (response.data.confirmed)
+        if (response.data.confirmed) {
           _sysID = response.data.sysID;
-        membership = response.data.membership;
+          membership = response.data.membership;
+          totalImps = response.data.monthlyImps;
+        }
       } else {
         const resp2 = await axios.post(`${Web.Server}/api/userdetails`, {
           Email: session.user.email,
@@ -201,7 +204,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     props: {
       userDetails: {
         _sysID: _sysID,
-        Membership: membership
+        Membership: membership,
+        TotalImps: totalImps
       }
     }
   }

@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Web } from "../../../Details";
+import { Tier, Web } from "../../../Details";
 import campModel from "@/schemas/campaignInfo";
 import NotifModel from "@/schemas/notifInfo";
 import Connect from "@/schemas/connect";
+import UserModel from "@/schemas/userInfo";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -18,14 +19,53 @@ export default async function handler(
       const last10 = str.substring(str.length - 10);
 
       Connect();
-      const plainAddr = targetAddr.split('/')[2];
+      const plainAddr = targetAddr.split("/")[2];
       const campaignsList = await campModel
         .find({ URL: plainAddr, User: first32, selfID: last10 })
         .exec();
+
       if (campaignsList.length > 0) {
+        //Check if user has limits
+        const userData = await UserModel.find({ sysID: first32 });
+        const userQuota = Tier.find(
+          ({ Membership }) => Membership === userData[0].Membership
+        );
+        if (userData[0].MonthtlyImpressions > userQuota?.ALLOWED_IMPS!) {
+          res.status(200).send(`console.log('Limit reached');`);
+          return;
+        } else {
+          //resetting
+          if (userData[0].MonthtlyImpressions !== 0) {
+            const currentDate = new Date();
+            const nextDay = new Date(
+              currentDate.setDate(currentDate.getDate() + 1)
+            );
+            const isFirstDayOfMonth = nextDay.getDate() === 1;
+            if (isFirstDayOfMonth) {
+              const updatedUser = await UserModel.updateOne(
+                { sysID: first32 },
+                { MonthtlyImpressions: 0 }
+              ).exec();
+            }
+          } else {
+            const updatedUser = await UserModel.updateOne(
+              { sysID: first32 },
+              { $inc: { MonthtlyImpressions: 1 } }
+            ).exec();
+          }
+        }
+       
+
         const notifs = await NotifModel.find({
           CampaignID: campaignsList[0].selfID,
         }).exec();
+
+        const updated = await NotifModel.updateMany(
+          { CampaignID: campaignsList[0].selfID },
+          { $inc: { Impression: 1 } },
+          { new: true }
+        ).exec();
+
         if (notifs.length > 0) {
           let devToolKit = "";
           let animation = "";
@@ -34,19 +74,49 @@ export default async function handler(
             let currentBody = "";
             if (data.NotifType === "Email Collector") {
               currentBody += `
-                <div class='emailCollectorBox' id='emailCollectorBox' style='background-color:${data.customizeBG};' >
-                    <div class='dt_container_head' style='color: ${data.customizeTitle}'>
+                <div class='emailCollectorBox' id='emailCollectorBox' style='background-color:${
+                  data.customizeBG
+                };' >
+                    <div class='dt_container_head' style='color: ${
+                      data.customizeTitle
+                    }'>
                         <b>${data.notifTitle}</b>
-                        ${data.displayCloseButton === true ? "<span class='closingButton' onClick='Close(\"emailCollectorBox\");' title='Close'>x</span>" : ""}
+                        ${
+                          data.displayCloseButton === true
+                            ? "<span class='closingButton' onClick='Close(\"emailCollectorBox\");' title='Close'>x</span>"
+                            : ""
+                        }
                     </div>
                     <div class='dt_container_body'>
-                        <p style='color: ${data.customizeDesc};'>${data.notifDesc}</p>
+                        <p style='color: ${data.customizeDesc};'>${
+                data.notifDesc
+              }</p>
                         <div class='dt_inline_input'>
-                            <input type="text" name="name" style='color: ${data.customizeInputText} !important; background-color: ${data.customizeInputBG} !important;' id="devtools_name" placeholder="${data.notifNPlaceholder}" />
-                            <input type="email" name="email" style='color: ${data.customizeInputText} !important; background-color: ${data.customizeInputBG} !important;' id="devtools_email" placeholder="${data.notifEPlaceholder}" />
+                            <input type="text" name="name" style='color: ${
+                              data.customizeInputText
+                            } !important; background-color: ${
+                data.customizeInputBG
+              } !important;' id="devtools_name" placeholder="${
+                data.notifNPlaceholder
+              }" />
+                            <input type="email" name="email" style='color: ${
+                              data.customizeInputText
+                            } !important; background-color: ${
+                data.customizeInputBG
+              } !important;' id="devtools_email" placeholder="${
+                data.notifEPlaceholder
+              }" />
                         </div>
-                        <button onClick='SubmitEmail(\"${data.notifRedirect}\");' class='dt_button' style='color: ${data.customizeButtonText}; background-color: ${data.customizeButtonBG};'>${data.notifButton}</button>
-                        <div class='dt_copyright'>Powered by <a href='${Web.Server}' target='_blank' class='link'>DevTools</a></div>
+                        <button onClick='SubmitEmail(\"${
+                          data.notifRedirect
+                        }\");' class='dt_button' style='color: ${
+                data.customizeButtonText
+              }; background-color: ${data.customizeButtonBG};'>${
+                data.notifButton
+              }</button>
+                        <div class='dt_copyright'>Powered by <a href='${
+                          Web.Server
+                        }' target='_blank' class='link'>DevTools</a></div>
                     </div>
                 </div>`;
             }
@@ -154,7 +224,8 @@ export default async function handler(
               `;
           });
 
-          const scriptStart = `window.addEventListener('load', function() {
+          const scriptStart =
+            `window.addEventListener('load', function() {
             const bodyScript = document.createElement('script');
             bodyScript.setAttribute('id', 'devToolScripts');
             document.body.appendChild(bodyScript);
@@ -174,7 +245,11 @@ export default async function handler(
             const div = document.createElement('div');
             div.setAttribute('id', 'devToolKit');
             document.body.append(div);
-            document.body.innerHTML += ` + '`' + devToolKit + '`' + `;
+            document.body.innerHTML += ` +
+            "`" +
+            devToolKit +
+            "`" +
+            `;
 
             ${animation}
 

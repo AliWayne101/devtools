@@ -7,9 +7,10 @@ export interface IUserInfo {
   FullName: string;
   sysID: string;
   Membership: string;
+  MonthtlyImpressions: number;
 }
 
-const Users = new Schema({
+const Users = new Schema<IUserInfo>({
   _id: mongoose.Types.ObjectId,
   Password: String,
   Email: String,
@@ -19,6 +20,10 @@ const Users = new Schema({
     Default: ''
   },
   Membership: String,
+  MonthtlyImpressions: {
+    type: Number,
+    default: 0
+  }
 });
 
 
