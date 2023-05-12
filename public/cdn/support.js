@@ -1,4 +1,4 @@
-function sendRequest(Data) {
+function sendRequest(Data, _url) {
   const xhr = new XMLHttpRequest();
   const url = "https://devtools-wayne.vercel.app/api/clients/emailcollector";
   const method = "POST";
@@ -7,15 +7,25 @@ function sendRequest(Data) {
   xhr.onload = function () {
     if (xhr.status === 200) {
       console.log(xhr.responseText);
+      if (_url.length > 0) {
+        window.location.href = _url;
+      } else {
+        //Find a way to say thankyou on notif
+      }
     }
   };
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(json);
 }
 
-function SubmitEmail() {
+function SubmitEmail(redirURL) {
   const name = document.getElementById("devtools_name").value;
   const email = document.getElementById("devtools_email").value;
-  const sData = { name: name, email: email };
-  sendRequest(sData);
+  if (name.length > 0 && email.length > 0 && email.includes('@')) {
+    const sData = { name: name, email: email };
+    console.log(sData);
+    sendRequest(sData, redirURL);
+  } else {
+    console.log({ name, email });
+  }
 }
