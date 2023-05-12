@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,200&display=swap");
-
+:root {
+  --theme-color: rgba(153, 42, 218, 0.986);
+}
 .closingButton {
   cursor: pointer;
 }
@@ -8,8 +10,31 @@
   display: none;
 }
 
-#devToolKit {
-  position: absolute !important;
+.link {
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  color: var(--theme-color);
+}
+.link:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 0.5px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--theme-color);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+.link:hover::after,
+.link:focus::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+.link:focus {
+  outline: none;
 }
 
 /* Email Collector Start */
