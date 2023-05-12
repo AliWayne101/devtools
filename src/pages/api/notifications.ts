@@ -32,7 +32,7 @@ export default async function handler(
           });
       } else if (action === "setactivity") {
         const { newStatus } = req.query;
-        const update = NotifModel.findOneAndUpdate(
+        const update = await NotifModel.findOneAndUpdate(
           { _id: target },
           { Active: newStatus === "true" ? true : false },
           { returnOriginal: false }
@@ -40,7 +40,7 @@ export default async function handler(
         res.status(200).json({ doc: update });
       } else if (action === "deletenotif") {
         const { user } = req.query;
-        const update = NotifModel.findOneAndDelete({ _id: target, User: user });
+        const update = await NotifModel.deleteOne({ _id: target, User: user }).exec();
         res.status(200).json({ completed: true });
       } else if (action === "getsomenotifs") {
         NotifModel.find({ User: target })

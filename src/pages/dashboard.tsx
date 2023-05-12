@@ -104,7 +104,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     try {
       const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${session.user.email}`);
       if (response.data.exists) {
-        console.log(response.data);
         if (response.data.confirmed) {
           _sysID = response.data.sysID;
           membership = response.data.membership;
@@ -114,8 +113,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         const resp2 = await axios.post(`${Web.Server}/api/userdetails`, {
           Email: session.user.email,
           FullName: session.user.name,
-        }
-        );
+        });
         _sysID = resp2.data.sysID;
         membership = response.data.membership;
       }
