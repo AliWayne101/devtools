@@ -325,7 +325,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                                                     <Toggle isEnabled={data.Active} />
                                                 </span>
                                             </div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2'>
+                                            <div className='pt-4 pb-4 pl-2 pr-2 text-[var(--theme-color)]'>
                                                 <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
                                             </div>
                                         </div>
