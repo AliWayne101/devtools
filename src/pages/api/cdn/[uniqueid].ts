@@ -9,7 +9,7 @@ export default async function handler(
 ) {
   res.setHeader("Content-Type", "application/javascript");
 
-  if (true) {
+  if (req.headers.referer) {
     const targetAddr = req.headers.referer;
     const { uniqueid } = req.query;
     if (uniqueid && uniqueid.length === 42) {
@@ -18,9 +18,9 @@ export default async function handler(
       const last10 = str.substring(str.length - 10);
 
       Connect();
-      //const plainAddr = targetAddr.split('/')[2];
+      const plainAddr = targetAddr.split('/')[2];
       const campaignsList = await campModel
-        .find({ URL: "waynecrypt.eu3.org", User: first32, selfID: last10 })
+        .find({ URL: plainAddr, User: first32, selfID: last10 })
         .exec();
       console.log(campaignsList);
       if (campaignsList.length > 0) {
@@ -157,39 +157,18 @@ export default async function handler(
               `;
           });
 
-          const functionalScripts = `
-          function sendRequest(Data) {
-            const xhr = new XMLHttpRequest();
-            const url = "${Web.Server}";
-            const method = "POST";
-            const json = JSON.stringify(Data);
-            xhr.open(method, url);
-            xhr.onload = function () {
-              if (xhr.status === 200) {
-                console.log(xhr.responseText);
-              }
-            };
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(json);
-          }
-          
-          function SubmitEmail() {
-            const name = document.getElementById("devtools_name").value;
-            const email = document.getElementById("devtools_email").value;
-            const sData = { name: name, email: email };
-            sendRequest(sData);
-          }
-          `;
-
           const scriptStart = `window.addEventListener('load', function() {
             const bodyScript = document.createElement('script');
             bodyScript.setAttribute('id', 'devToolScripts');
             document.body.appendChild(bodyScript);
+
+            const supportScript = document.createElement('script');
+            supportScript.setAttribute('src', '${Web.Server}/cdn/support.js');
+            document.body.appendChild(supportScript);
             
             const closingscript = "function Close(boxID) { document.getElementById(boxID).classList.add('hide'); }";
             bodyScript.textContent += closingscript;
-            bodyScript.textContent += ` + '`' + functionalScripts + '`' + `;
-    
+
             const customCss = document.createElement('link');
             customCss.rel = 'stylesheet';
             customCss.href='${Web.Server}/cdn/boxes.css';
