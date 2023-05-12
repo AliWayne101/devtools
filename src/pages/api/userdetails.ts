@@ -50,7 +50,7 @@ export default async function handler(
                   .then((updated) => {
                     res
                       .status(200)
-                      .json({ confirmed: true, sysID: nSysID, exists: true, membership: updated ? updated.Membership : "Free", monthlyImps: updated ? updated.MonthtlyImpressions : 0 });
+                      .json({ confirmed: true, sysID: nSysID, exists: true, membership: updated ? updated.Membership : "Free", monthlyImps: updated ? updated.MonthtlyImpressions : 0, doc: 'doc'});
                   })
                   .catch((err) => {
                     res.status(200).json({
@@ -66,7 +66,8 @@ export default async function handler(
                   sysID: docs[0].sysID,
                   already: true,
                   exists: true,
-                  membership: docs[0].Membership
+                  membership: docs[0].Membership,
+                  monthlyImps: docs[0].MonthtlyImpressions,
                 });
               }
             } else {

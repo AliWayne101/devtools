@@ -24,7 +24,7 @@ const Dashboard = ({ userDetails }: Props) => {
 
   const [TotalCampaigns, setTotalCampaigns] = useState<ICampaigns[]>([]);
   const [TotalNotifs, setTotalNotifs] = useState<INotification[]>([]);
-  const [TotalImpression, setTotalImpression] = useState(0);
+  const [TotalImpression, setTotalImpression] = useState(userDetails.TotalImps ? userDetails.TotalImps : 0);
   const [isLoading, setIsLoading] = useState(true);
   const { data: session } = useSession();
   useEffect(() => {
@@ -66,7 +66,7 @@ const Dashboard = ({ userDetails }: Props) => {
       </Head>
       <Navbar />
       {isLoading === false && (
-        <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={userDetails.TotalImps} userDetails={userDetails} />
+        <Details camps={TotalCampaigns.length} notifs={TotalNotifs.length} imps={TotalImpression} userDetails={userDetails} />
       )}
       <main>
         <div className="mainTitle font-fira text-[var(--light-slate)] mb-5">
@@ -104,6 +104,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     try {
       const response = await axios.get(`${Web.Server}/api/userdetails?action=generateID&target=${session.user.email}`);
       if (response.data.exists) {
+        console.log(response.data);
         if (response.data.confirmed) {
           _sysID = response.data.sysID;
           membership = response.data.membership;
