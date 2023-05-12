@@ -68,6 +68,13 @@ export default async function handler(
         .catch((err) => {
           res.status(200).json({ exists: false, email: null, error: err });
         });
+    } else if (action === "deletecampaign") {
+      const { userid } = req.query;
+      const deleted = await campModel.deleteOne({
+        User: userid,
+        selfID: target,
+      }).exec();
+      res.status(200).json({ deleted: true });
     }
   }
 }
