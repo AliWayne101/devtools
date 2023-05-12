@@ -55,7 +55,7 @@ export default async function handler(
                   .save()
                   .then((response) => {
                     console.log(response);
-                    console.log("Saved");
+                    console.log("Email Registered");
                   })
                   .catch((err) => console.log(err));
                 if (response.length > 0) {
