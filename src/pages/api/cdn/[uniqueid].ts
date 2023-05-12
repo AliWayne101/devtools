@@ -69,7 +69,6 @@ export default async function handler(
                     `;
             } else if (data.displayPosition === "Bottom Right") {
               innerAnimationStarting = `
-              let initialValue = 110;
               target.style['right'] = '15px';
               target.style['bottom'] =  initialValue + 'px';
               `;
@@ -85,6 +84,7 @@ export default async function handler(
             animation += `
             function startShowing() {
                 let opacity = 0;
+                let initialValue = 110;
                 const _int = setInterval(() => {
                     const target = document.getElementById('emailCollectorBox');
                     ${innerAnimationStarting}
