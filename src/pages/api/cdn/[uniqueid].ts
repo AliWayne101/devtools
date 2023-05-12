@@ -197,7 +197,7 @@ export default async function handler(
             const div = document.createElement('div');
             div.setAttribute('id', 'devToolKit');
             document.body.append(div);
-            div.innerHTML += ` + '`' + devToolKit + '`' + `;
+            document.body.innerHTML += ` + '`' + devToolKit + '`' + `;
 
             ${animation}
 
