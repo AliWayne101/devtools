@@ -10,7 +10,8 @@ function sendRequest(Data, _url) {
       if (_url.length > 0) {
         window.location.href = _url;
       } else {
-        document.querySelector('.dt_container_body').innerHTML('<b style="margin-top: 100px;">Your e-mail has been submitted<br>Thank you</b>')
+        const containerBody = document.getElementsByClassName('dt_container_body');
+        containerBody.innerHTML += `<b style="margin-top: 100px;">Your e-mail has been submitted<br>Thank you</b>`;
       }
     }
   };

@@ -45,14 +45,19 @@ export default async function handler(
             NotifModel.find({ CampaignID: response[0].selfID })
               .exec()
               .then((response) => {
-                EmailModel.create({
+                const newEntry = new EmailModel({
                   _id: new mongoose.Types.ObjectId(),
                   Name: name,
                   Email: email,
                   RefferingDomain: plainAddr,
-                })
-                  .then(() => console.log("an Email was registered"))
-                  .catch((err) => console.log);
+                });
+                newEntry
+                  .save()
+                  .then((response) => {
+                    console.log(response);
+                    console.log("Saved");
+                  })
+                  .catch((err) => console.log(err));
                 if (response.length > 0) {
                   if (response[0].dataSendData) {
                     axios
