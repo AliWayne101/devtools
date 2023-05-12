@@ -43,8 +43,8 @@ export default async function handler(
                     <div class='dt_container_body'>
                         <p style='color: ${data.customizeDesc};'>${data.notifDesc}</p>
                         <div class='dt_inline_input'>
-                            <input type="text" name="name" style='color: ${data.customizeButtonText} !important; background-color: ${data.customizeInputBG} !important;' id="devtools_name" placeholder="${data.notifNPlaceholder}" />
-                            <input type="email" name="email" style='color: ${data.customizeButtonText} !important; background-color: ${data.customizeInputBG} !important;' id="devtools_email" placeholder="${data.notifEPlaceholder}" />
+                            <input type="text" name="name" style='color: ${data.customizeInputText} !important; background-color: ${data.customizeInputBG} !important;' id="devtools_name" placeholder="${data.notifNPlaceholder}" />
+                            <input type="email" name="email" style='color: ${data.customizeInputText} !important; background-color: ${data.customizeInputBG} !important;' id="devtools_email" placeholder="${data.notifEPlaceholder}" />
                         </div>
                         <button onClick='SubmitEmail();' class='dt_button' style='color: ${data.customizeButtonText}; background-color: ${data.customizeButtonBG};'>${data.notifButton}</button>
                         <div class='dt_copyright'>Powered by <a href='${Web.Server}' target='_blank' class='link'>DevTools</a></div>
