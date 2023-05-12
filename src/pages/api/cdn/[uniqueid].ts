@@ -55,14 +55,14 @@ export default async function handler(
                               data.customizeButtonText
                             }; background-color: ${
                 data.customizeInputBG
-              };' id="name" placeholder="${data.notifNPlaceholder}" />
+              };' id="devtools_name" placeholder="${data.notifNPlaceholder}" />
                             <input type="email" name="email" style='color: ${
                               data.customizeButtonText
                             }; background-color: ${
                 data.customizeInputBG
-              };' id="email" placeholder="${data.notifEPlaceholder}" />
+              };' id="devtools_email" placeholder="${data.notifEPlaceholder}" />
                         </div>
-                        <button class='dt_button' style='color: ${
+                        <button onClick='SubmitEmail();' class='dt_button' style='color: ${
                           data.customizeButtonText
                         }; background-color: ${data.customizeButtonBG};'>${
                 data.notifButton
@@ -89,6 +89,17 @@ export default async function handler(
                     initialValue = initialValue + 15;
                     target.style['top'] =  initialValue + 'px';
                     `;
+            } else if (data.displayPosition === "Bottom Right") {
+              innerAnimationStarting = `
+              let initialValue = 110;
+              target.style['right'] = '15px';
+              target.style['bottom'] =  initialValue + 'px';
+              `;
+
+              innerAnimationEnd = `
+              initialValue = initialValue - 15;
+              target.style['bottom'] =  initialValue + 'px';
+              `;
             }
 
             let mainAnimation = `
@@ -164,13 +175,41 @@ export default async function handler(
               `;
           });
 
+          const functionalScripts = `
+          function sendRequest(Data) {
+            const xhr = new XMLHttpRequest();
+            const url = "${Web.Server}/api/clients/emailcollector";
+            const method = "POST";
+            const json = JSON.stringify(Data);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function () {
+              if (xhr.status === 200) {
+                console.log(xhr.responseText);
+              }
+            };
+          
+            xhr.open(method, url);
+            xhr.send(json);
+          }
+          
+          function SubmitEmail() {
+              const name = document.getElementById('devtools_name').value;
+              const email = document.getElementById('devtools_email').value;
+              const sData = {
+                  name: name,
+                  email: email,
+              }
+              sendRequest(sData);
+          }`;
+
           const scriptStart = `window.addEventListener('load', function() {
             const bodyScript = document.createElement('script');
             bodyScript.setAttribute('id', 'devToolScripts');
             document.body.appendChild(bodyScript);
             
-            const scripts = "function Close(boxID) { document.getElementById(boxID).classList.add('hide'); }";
-            bodyScript.textContent += scripts;
+            const closingscript = "function Close(boxID) { document.getElementById(boxID).classList.add('hide'); }";
+            bodyScript.textContent += closingscript;
+            bodyScript.textContent += ${functionalScripts};
     
             const customCss = document.createElement('link');
             customCss.rel = 'stylesheet';
