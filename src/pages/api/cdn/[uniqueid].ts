@@ -18,8 +18,9 @@ export default async function handler(
       const last10 = str.substring(str.length - 10);
 
       Connect();
+      const plainAddr = targetAddr.split('/')[2];
       const campaignsList = await campModel
-        .find({ URL: targetAddr, User: first32, selfID: last10 })
+        .find({ URL: plainAddr, User: first32, selfID: last10 })
         .exec();
       console.log(campaignsList);
       if (campaignsList.length > 0) {
