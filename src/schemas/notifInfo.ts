@@ -21,6 +21,8 @@ export interface INotification {
   customizeBG: string;
   customizeButtonBG: string;
   customizeButtonText: string;
+  customizeInputBG: string;
+  customizeInputText: string;
   dataSendData: boolean;
   dataWebhook: string;
   CampaignID: string;
@@ -52,6 +54,8 @@ const NotificationSchema = new Schema<INotification>({
   customizeBG: { type: String },
   customizeButtonBG: { type: String },
   customizeButtonText: { type: String },
+  customizeInputBG: { type: String },
+  customizeInputText: { type: String },
   dataSendData: { type: Boolean },
   dataWebhook: { type: String },
   CampaignID: { type: String },
@@ -65,9 +69,13 @@ const NotificationSchema = new Schema<INotification>({
 let NotifModel: Model<INotification>;
 
 try {
-    NotifModel = model<INotification>("notifications");
+  NotifModel = model<INotification>("notifications");
 } catch {
-    NotifModel = model<INotification>("notifications", NotificationSchema, "Notifications");
+  NotifModel = model<INotification>(
+    "notifications",
+    NotificationSchema,
+    "Notifications"
+  );
 }
 
 export default NotifModel;

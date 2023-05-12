@@ -206,7 +206,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                             Copy and paste the following JS Code Snippet before the end of the <span className="link">head</span> tag of your website.
                             <div className="overflow-auto min-h-fit bg-primary p-10 mt-2 mb-2" ref={copyRef}>
                                 &lt;!-- DevTools Code from {Web.Server} --&gt;<br />
-                                &lt;script defer src=&quot;{Web.Server}/code/{userDetails._sysID}{curCampAddr}&quot;&gt;&lt;/script&gt;<br />
+                                &lt;script defer src=&quot;{Web.Server}/api/cdn/{userDetails._sysID}{curCampAddr}&quot;&gt;&lt;/script&gt;<br />
                                 &lt;-- END DevTools Code --&gt;
                             </div>
                             <span onClick={() => CopyText()}><Button name={'Copy'} href={'null'} /></span>

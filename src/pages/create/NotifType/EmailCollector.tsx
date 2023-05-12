@@ -54,7 +54,9 @@ const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
         customizeDesc: "#000",
         customizeBG: "#fff",
         customizeButtonBG: "#272727",
-        customizeButtonText: "#fff"
+        customizeButtonText: "#fff",
+        customizeInputBG: "#fff",
+        customizeInputText: "#000",
     });
 
     const [dataData, setDataData] = useState({
@@ -133,7 +135,9 @@ const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
                     <div className="devToolsBox">
                         <div className='dt_container_head'>
                             <b>{basicData.notifTitle}</b>
-                            <span className='closingButton' title='Close'>X</span>
+                            {displayData.displayCloseButton && (
+                                <span className='closingButton' title='Close'>x</span>
+                            )}
                         </div>
                         <div className='dt_container_body'>
                             <p>{basicData.notifDesc}</p>
@@ -329,6 +333,14 @@ const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
                             <div className="text-[var(--slate)] font-inter mt-3">
                                 <div>Button Text Color</div>
                                 <input type="text" name="customizeButtonText" value={customizeData.customizeButtonText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Input Text Color</div>
+                                <input type="text" name="customizeInputText" value={customizeData.customizeInputText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                            </div>
+                            <div className="text-[var(--slate)] font-inter mt-3">
+                                <div>Input Background Color</div>
+                                <input type="text" name="customizeInputBG" value={customizeData.customizeInputBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
                             </div>
                         </>
                     ) : (
