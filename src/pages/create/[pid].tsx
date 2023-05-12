@@ -81,7 +81,8 @@ const Create = () => {
     }
 
     const NotifCreated = (status: boolean) => {
-        router.push(`/campaign/${pid}`);
+        if (status)
+            router.push(`/campaign/${pid}`);
     }
 
     return (

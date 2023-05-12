@@ -34,43 +34,19 @@ export default async function handler(
             let currentBody = "";
             if (data.NotifType === "Email Collector") {
               currentBody += `
-                <div class='emailCollectorBox' id='emailCollectorBox' style='background-color:${
-                  data.customizeBG
-                };' >
-                    <div class='dt_container_head' style='color: ${
-                      data.customizeTitle
-                    }'>
+                <div class='emailCollectorBox' id='emailCollectorBox' style='background-color:${data.customizeBG};' >
+                    <div class='dt_container_head' style='color: ${data.customizeTitle}'>
                         <b>${data.notifTitle}</b>
-                        ${
-                          data.displayCloseButton === true
-                            ? "<span class='closingButton' onClick='Close('emailCollectorBox');' title='Close'>x</span>"
-                            : ""
-                        }
+                        ${data.displayCloseButton === true ? "<span class='closingButton' onClick='Close(\"emailCollectorBox\");' title='Close'>x</span>" : ""}
                     </div>
                     <div class='dt_container_body'>
-                        <p style='color: ${data.customizeDesc};'>${
-                data.notifDesc
-              }</p>
+                        <p style='color: ${data.customizeDesc};'>${data.notifDesc}</p>
                         <div class='dt_inline_input'>
-                            <input type="text" name="name" style='color: ${
-                              data.customizeButtonText
-                            }; background-color: ${
-                data.customizeInputBG
-              };' id="devtools_name" placeholder="${data.notifNPlaceholder}" />
-                            <input type="email" name="email" style='color: ${
-                              data.customizeButtonText
-                            }; background-color: ${
-                data.customizeInputBG
-              };' id="devtools_email" placeholder="${data.notifEPlaceholder}" />
+                            <input type="text" name="name" style='color: ${data.customizeButtonText}; background-color: ${data.customizeInputBG};' id="devtools_name" placeholder="${data.notifNPlaceholder}" />
+                            <input type="email" name="email" style='color: ${data.customizeButtonText}; background-color: ${data.customizeInputBG};' id="devtools_email" placeholder="${data.notifEPlaceholder}" />
                         </div>
-                        <button onClick='SubmitEmail();' class='dt_button' style='color: ${
-                          data.customizeButtonText
-                        }; background-color: ${data.customizeButtonBG};'>${
-                data.notifButton
-              }</button>
-                        <div class='dt_copyright'>Powered by <a href='${
-                          Web.Server
-                        }' target='_blank' class='link'>DevTools</div>
+                        <button onClick='SubmitEmail();' class='dt_button' style='color: ${data.customizeButtonText}; background-color: ${data.customizeButtonBG};'>${data.notifButton}</button>
+                        <div class='dt_copyright'>Powered by <a href='${Web.Server}' target='_blank' class='link'>DevTools</div>
                     </div>
                 </div>`;
             }

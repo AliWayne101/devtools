@@ -9,7 +9,7 @@ import axios from 'axios';
 import { notifHelp } from '@/Details';
 import mongoose from 'mongoose';
 
-const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
+const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -119,8 +119,9 @@ const EmailCollector = ({ campignID, userID, onCompleted}: notifHelp) => {
 
         axios.post(`/api/notifications`, data)
             .then((response) => {
+                console.log(response.data);
                 if (response.data.created)
-                onCompleted(true);
+                    onCompleted(true);
             }).catch(err => console.log);
     }
 
