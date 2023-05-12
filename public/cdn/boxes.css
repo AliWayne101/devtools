@@ -7,13 +7,17 @@
 .hide {
   display: none;
 }
+
+#devToolKit {
+  position: absolute !important;
+}
+
 /* Email Collector Start */
 .emailCollectorBox {
   opacity: 0;
   height: 200px !important;
   width: 400px !important;
   padding: 20px !important;
-  position: absolute !important;
   font-family: "Poppins" !important;
   border-radius: 10px;
   z-index: 100 !important;
