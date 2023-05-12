@@ -11,7 +11,7 @@ function sendRequest(Data, _url) {
         window.location.href = _url;
       } else {
         const containerBody = document.getElementsByClassName('dt_container_body');
-        containerBody.innerHTML += `<b style="margin-top: 100px;">Your e-mail has been submitted<br>Thank you</b>`;
+        containerBody.innerHTML = `<b style="margin-top: 100px;">Your e-mail has been submitted<br>Thank you</b>`;
       }
     }
   };

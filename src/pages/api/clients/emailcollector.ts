@@ -34,8 +34,8 @@ export default async function handler(
         const { name, email } = req.body;
 
         const emailRes = await EmailModel.find({ Email: email }).exec();
-        if (email.length > 0) {
-          res.status(200).json({ registered: true });
+        if (emailRes.length > 0) {
+          res.status(200).json({ already: true });
           return;
         }
 
