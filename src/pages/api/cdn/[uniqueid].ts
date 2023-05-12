@@ -30,6 +30,7 @@ export default async function handler(
         if (notifs.length > 0) {
           let devToolKit = "";
           let animation = "";
+          let triggers = "";
           notifs.map((data) => {
             let currentBody = "";
             if (data.NotifType === "Email Collector") {
@@ -79,37 +80,40 @@ export default async function handler(
               `;
             }
 
-            let mainAnimation = `
+            animation += `
+            function startShowing() {
+                let opacity = 0;
                 const _int = setInterval(() => {
                     const target = document.getElementById('emailCollectorBox');
-                    let opacity = 0;
-                    
                     ${innerAnimationStarting}
 
                     const tick = 0.2;
                     if (opacity < 1) {
                         opacity += tick;
                         target.style['opacity'] = opacity;
+                        console.log(opacity);
                         ${innerAnimationEnd}
                     } else {
                         clearInterval(_int);
                     }
                 }, 50); 
+            }
                 `;
 
             let writeTrigger = "";
 
             if (data.triggerType === "Delay") {
+              const DeltaTime = parseInt(data.triggerValue) * 1000;
               writeTrigger += `
-                      let d = ${data.triggerValue} * 1000;
                       setTimeout(() => {
-                          ${mainAnimation}
-                      }, d); `;
+                        console.log('Showing now');
+                        startShowing();
+                      }, ${DeltaTime}); `;
             } else if (data.triggerType === "Exit Intent") {
               writeTrigger += `
                       window.addEventListener('mouseout', (event) => {
                           if (event.clientY < 0 && !isExitIntent) {
-                              ${mainAnimation}
+                            startShowing();
                           }
                         }); `;
             } else if (data.triggerType === "Mouse Hover") {
@@ -117,14 +121,14 @@ export default async function handler(
                   const elements = document.querySelectorAll("${data.triggerValue}");
                   elements.forEach((element) => {
                       element.addEventListener("mouseenter", () => {
-                          ${mainAnimation}
+                        startShowing();
                       });
                   }); `;
             } else if (data.triggerType === "Mouse Click") {
               writeTrigger += `
                       const clickk = document.querySelectorAll("${data.triggerValue}");
                       clickk.addEventListener("click", () => {
-                          ${mainAnimation}
+                        startShowing();
                       }); `;
             } else if (data.triggerType === "Scroll Percentage") {
               writeTrigger += `const scrollPercentage =
@@ -134,11 +138,11 @@ export default async function handler(
                   100;
                   
                   if (scrollPercentage >= ${data.triggerValue}) {
-                      ${mainAnimation}
+                    startShowing();
                   } `;
             }
 
-            animation += `
+            triggers += `
               let allowed = false;
               if (window.innerWidth <= 768) {
                 allowed = ${data.triggerDisplaySmall};
@@ -152,7 +156,29 @@ export default async function handler(
               `;
           });
 
-          const functionalScripts = `function sendRequest(Data){const xhr=new XMLHttpRequest();const url="${Web.Server}";const method="POST";const json=JSON.stringify(Data);xhr.open(method,url);xhr.onload=function(){if(xhr.status===200){console.log(xhr.responseText)}};xhr.setRequestHeader("Content-Type","application/json");xhr.send(json);}function SubmitEmail(){const name=document.getElementById(\'devtools_name\').value;const email=document.getElementById(\'devtools_email\').value;const sData={name:name,email:email};sendRequest(sData);}`;
+          const functionalScripts = `
+          function sendRequest(Data) {
+            const xhr = new XMLHttpRequest();
+            const url = "${Web.Server}";
+            const method = "POST";
+            const json = JSON.stringify(Data);
+            xhr.open(method, url);
+            xhr.onload = function () {
+              if (xhr.status === 200) {
+                console.log(xhr.responseText);
+              }
+            };
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(json);
+          }
+          
+          function SubmitEmail() {
+            const name = document.getElementById("devtools_name").value;
+            const email = document.getElementById("devtools_email").value;
+            const sData = { name: name, email: email };
+            sendRequest(sData);
+          }
+          `;
 
           const scriptStart = `window.addEventListener('load', function() {
             const bodyScript = document.createElement('script');
@@ -161,7 +187,7 @@ export default async function handler(
             
             const closingscript = "function Close(boxID) { document.getElementById(boxID).classList.add('hide'); }";
             bodyScript.textContent += closingscript;
-            bodyScript.textContent += '${functionalScripts}';
+            bodyScript.textContent += ` + '`' + functionalScripts + '`' + `;
     
             const customCss = document.createElement('link');
             customCss.rel = 'stylesheet';
@@ -175,6 +201,7 @@ export default async function handler(
 
             ${animation}
 
+            ${triggers}
             }); `;
 
           res.status(200).send(scriptStart);
