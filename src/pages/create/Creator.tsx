@@ -1,52 +1,74 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { ICreatorData, creatorProps, defaultEmailData, defaultEmpty } from '@/Details'
+import EC from './NotifType/EC';
 import { FaCog, FaMobile, FaPaintBrush } from 'react-icons/fa';
-import { MdMonitor } from 'react-icons/md';
 import { TbActivity } from 'react-icons/tb';
+import { MdMonitor } from 'react-icons/md';
 import { BsDatabase } from 'react-icons/bs';
+import mongoose from 'mongoose';
+import axios from 'axios';
 import Button from '@/components/Button';
 import Toggle from '@/components/Toggle';
-import axios from 'axios';
-import { notifHelp } from '@/Details';
-import mongoose from 'mongoose';
 
-const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
 
+const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
+
+    //Active Indexing
     const [activeIndex, setActiveIndex] = useState(0);
-
-    const handleDivClick = (index: number) => {
+    const handleActiveClick = (index: number) => {
         setActiveIndex(index);
     }
-
-    const getDivClassname = (index: number) => {
+    const activeTab = (index: number) => {
         return `cursor-pointer p-3 flex ${activeIndex === index ? 'bg-gray-200 rounded rounded-[20px]' : 'text-[var(--slate)]'}`;
     }
 
     const [externalData, setExternalData] = useState({
-        campignID: campignID,
-        userID: userID
+        campaignID: campaignID,
+        userID: userID,
     });
 
-    const [basicData, setBasicData] = useState({
-        notifName: "My new notification",
-        notifTitle: "Weekly newsletter",
-        notifDesc: "We do not send out spam emails & you can unsubscribe at any point.",
-        notifNPlaceholder: "Your name",
-        notifEPlaceholder: "Your email",
-        notifButton: "Sign me up",
-        notifRedirect: ""
+    const [mountedElement, setMountedElement] = useState<JSX.Element>();
+
+    const [basicData, setBasicData] = useState<ICreatorData>(defaultEmpty);
+
+    const [displayData, setDisplayData] = useState({
+        displayDuration: 5,
+        displayPosition: "Bottom Right",
+        displayCloseButton: true
     });
+
+    //Next default basicData
+    useEffect(() => {
+        switch (Tag) {
+            case "EmailCollector":
+                setBasicData(defaultEmailData);
+                break;
+
+            default:
+                break;
+        }
+    }, [Tag])
+
+    useEffect(() => {
+        renderComponent(Tag);
+    }, [basicData, displayData])
+
+    const renderComponent = (Tag: string) => {
+        switch (Tag) {
+            case "EmailCollector":
+                setMountedElement(<EC MountedData={basicData} ClosingButton={displayData.displayCloseButton} />);
+                break;
+
+            default:
+                break;
+        }
+    }
 
     const [triggersData, setTriggersData] = useState({
         triggerType: "Delay",
         triggerValue: "2",
         triggerDisplaySmall: true,
         triggerDisplayLarge: true
-    });
-
-    const [displayData, setDisplayData] = useState({
-        displayDuration: 5,
-        displayPosition: "Bottom Right",
-        displayCloseButton: true
     });
 
     const [customizeData, setCustomizeData] = useState({
@@ -103,6 +125,7 @@ const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
             return "CSS Selector: #id or .class of the element";
         }
     }
+
     const Create = async () => {
         const data = {
             _id: new mongoose.Types.ObjectId(),
@@ -112,67 +135,51 @@ const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
             ...displayData,
             ...customizeData,
             ...dataData,
-            CampaignID: externalData.campignID,
+            CampaignID: externalData.campaignID,
             User: externalData.userID,
         };
 
 
         axios.post(`/api/notifications`, data)
             .then((response) => {
-                console.log(response.data);
                 if (response.data.created)
                     onCompleted(true);
             }).catch(err => console.log);
     }
 
+
     return (
         <div className="w-full mb-10">
             <div className="grid grid-cols-1 sm:grid-cols-2">
-                <div className='mb-10 flex items-center'>
-                    <div className="mainTitle text-[var(--light-slate)] font-inter ml-2 ">Preview</div>
+                <div className="mb-10 flex items-center">
+                    <div className="mainTitle text-[var(--light-slate)] font-inter ml-2">Preview</div>
                 </div>
                 <div className="flex justify-end items-end mb-10">
-
-                    <div className="devToolsBox">
-                        <div className='dt_container_head'>
-                            <b>{basicData.notifTitle}</b>
-                            {displayData.displayCloseButton && (
-                                <span className='closingButton' title='Close'>x</span>
-                            )}
-                        </div>
-                        <div className='dt_container_body'>
-                            <p>{basicData.notifDesc}</p>
-                            <div className='dt_inline_input'>
-                                <input type="text" name="name" id="name" placeholder={basicData.notifNPlaceholder} />
-                                <input type="email" name="email" id="email" placeholder={basicData.notifEPlaceholder} />
-                            </div>
-                            <button className='dt_button'>{basicData.notifButton}</button>
-                            <div className='dt_copyright'>Powered by DevTools</div>
-                        </div>
-                    </div>
-
+                    {mountedElement && mountedElement}
                 </div>
             </div>
-            <div className="mainTitle font-inter text-[var(--slate)]">
-                Settings
-            </div>
+
+            <div className="mainTitle text-[var(--light-slate)] font-inter">Settings</div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
                 <div className="col-span-1 mt-5 pb-5">
-                    <div className={getDivClassname(0)} onClick={() => handleDivClick(0)}>
+                    <div className={activeTab(0)} onClick={() => handleActiveClick(0)}>
                         <FaCog size={20} className='mr-4 mt-1' /> Basic
                     </div>
-                    <div className={getDivClassname(1)} onClick={() => handleDivClick(1)}>
+                    <div className={activeTab(1)} onClick={() => handleActiveClick(1)}>
                         <TbActivity size={20} className='mr-4 mt-1' /> Triggers
                     </div>
-                    <div className={getDivClassname(2)} onClick={() => handleDivClick(2)}>
+                    <div className={activeTab(2)} onClick={() => handleActiveClick(2)}>
                         <MdMonitor size={20} className='mr-4 mt-1' /> Display
                     </div>
-                    <div className={getDivClassname(3)} onClick={() => handleDivClick(3)}>
+                    <div className={activeTab(3)} onClick={() => handleActiveClick(3)}>
                         <FaPaintBrush size={20} className='mr-4 mt-1' /> Customize
                     </div>
-                    <div className={getDivClassname(4)} onClick={() => handleDivClick(4)}>
-                        <BsDatabase size={20} className='mr-4 mt-1' /> Data
-                    </div>
+
+                    {Tag === "EmailCollector" && (
+                        <div className={activeTab(4)} onClick={() => handleActiveClick(4)}>
+                            <BsDatabase size={20} className='mr-4 mt-1' /> Data
+                        </div>
+                    )}
                 </div>
                 <div className="col-span-3 mt-5 size-body">
                     {activeIndex === 0 ? (
@@ -207,18 +214,21 @@ const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
                                 <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                             </div>
 
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Success Redirect (URL)</div>
-                                <input type="text" name="notifRedirect" value={basicData.notifRedirect} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
-                            </div>
+                            {Tag === "EmailCollector" && (
+                                <>
+                                    <div className="text-[var(--slate)] font-inter mt-3">
+                                        <div>Success Redirect (URL)</div>
+                                        <input type="text" name="notifRedirect" value={basicData.notifRedirect} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                        <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
+                                    </div>
+                                </>
+                            )}
 
                             <div className="mt-4">
                                 <span onClick={() => Create()}><Button name="Create" href="null" /></span>
                             </div>
                         </>
                     ) : activeIndex === 1 ? (
-
                         <div className="text-[var(--slate)] font-inter mt-3">
                             <div className='mb-5'>Display Trigger</div>
                             <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 mb-5">
@@ -277,7 +287,6 @@ const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
                                 </div>
                             </div>
                         </div>
-
                     ) : activeIndex === 2 ? (
                         <>
 
@@ -362,10 +371,11 @@ const EmailCollector = ({ campignID, userID, onCompleted }: notifHelp) => {
                         </>
                     )}
                 </div>
-            </div>
 
+
+            </div>
         </div>
     )
 }
 
-export default EmailCollector
+export default Creator

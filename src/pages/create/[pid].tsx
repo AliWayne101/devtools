@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { BiNetworkChart } from 'react-icons/bi'
 import { MdEmail } from 'react-icons/md'
 import EmailCollector from './NotifType/EmailCollector'
+import Creator from './Creator'
 
 const Create = () => {
     const router = useRouter();
@@ -73,11 +74,11 @@ const Create = () => {
             router.push('/dashboard');
     }
 
-    const NotificationType = (_Tag: string, Title: string) => {
+    const NotificationType = (_Tag: string) => {
         const curComp = components[componentIndex[_Tag]];
         setSelectedComp(curComp);
         setIsCompSelected(true);
-        setSelectedTitle(Title);
+        setSelectedTitle(_Tag);
     }
 
     const NotifCreated = (status: boolean) => {
@@ -108,9 +109,7 @@ const Create = () => {
 
                 {
                     startCreating ? (
-                        selectedTitle === "Email Collector" ?
-                            <EmailCollector campignID={typeof pid === "string" ? pid : "null"} userID={curUserID} onCompleted={NotifCreated} />
-                            : ""
+                        <Creator campaignID={typeof pid === "string" ? pid : "null"} userID={curUserID} Tag={selectedTitle} onCompleted={NotifCreated} />
                     ) : (
                         isCompSelected ? (
                             <>
@@ -127,7 +126,7 @@ const Create = () => {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full mt-20 mb-20">
                                 {weProvide.map((data, index) => (
-                                    <div onClick={() => NotificationType(data.Tag, data.Title)} className="justify-center text-center items-center bg-secondary pt-5 pb-5 service-grid" key={index}>
+                                    <div onClick={() => NotificationType(data.Tag)} className="justify-center text-center items-center bg-secondary pt-5 pb-5 service-grid" key={index}>
                                         {data.Icon}
                                         <div className="w-full p-3 block text-[var(--light-slate)]">{data.Title}</div>
                                         <div className="w-full p-3 block text-[var(--slate)]">{data.Description}</div>

@@ -35,9 +35,46 @@ export const generateID = (length: number) => {
   return result;
 };
 
+export type ICreatorData = {
+  notifName: string;
+  notifTitle: string;
+  notifDesc: string;
+  notifNPlaceholder: string;
+  notifEPlaceholder: string;
+  notifButton: string;
+  notifRedirect: string;
+};
+
+export const defaultEmpty = {
+  notifName: "",
+  notifTitle: "",
+  notifDesc: "",
+  notifNPlaceholder: "",
+  notifEPlaceholder: "",
+  notifButton: "",
+  notifRedirect: "",
+};
+
+export let defaultEmailData = {
+  notifName: "My new notification",
+  notifTitle: "Weekly newsletter",
+  notifDesc:
+    "We do not send out spam emails & you can unsubscribe at any point.",
+  notifNPlaceholder: "Your name",
+  notifEPlaceholder: "Your email",
+  notifButton: "Sign me up",
+  notifRedirect: "",
+};
 
 export type notifHelp = {
-  campignID: string,
-  userID: string,
+  campignID: string;
+  userID: string;
   onCompleted: (status: boolean) => void;
-}
+};
+
+export type creatorProps = {
+  campaignID: string;
+  userID: string;
+  Tag: string;
+  onCompleted: (status: boolean) => void;
+};
