@@ -73,7 +73,7 @@ const Dashboard = ({ userDetails }: Props) => {
           Hello, <span className="text-[var(--theme-color)]">{session?.user?.name}</span>
         </div>
         {isLoading ? <Loading /> : (
-          <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} Show={5} NotifData={TotalNotifs.slice(0, 5)} />
+          <LatestCampaigns userDetails={userDetails} CampData={TotalCampaigns} dashboard={true} NotifData={TotalNotifs.slice(0, 5)} />
         )}
 
         <Footer />

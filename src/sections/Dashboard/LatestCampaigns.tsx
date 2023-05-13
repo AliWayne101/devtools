@@ -14,13 +14,13 @@ import { RiEdit2Fill } from 'react-icons/ri'
 import { Web } from '@/Details'
 import { INotification } from '@/schemas/notifInfo'
 
-const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
+const LatestCampaigns = ({ userDetails, CampData, dashboard, NotifData }: {
     userDetails: {
         _sysID: string,
         Membership: string,
     },
     CampData: ICampaigns[],
-    Show: number,
+    dashboard: boolean,
     NotifData: INotification[]
 }) => {
     const [writeCampaign, setWriteCampaign] = useState(false);
@@ -31,6 +31,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
     const [errorMsg, setErrorMsg] = useState('');
     const [recentCampaigns, setRecentCampaigns] = useState<ICampaigns[]>(CampData);
     const [recentNotifications, setRecentNotifications] = useState<INotification[]>(NotifData);
+    const [seeCampaigns, setSeeCampaigns] = useState<ICampaigns[]>(CampData);
     const [membership, setMembership] = useState<iTier>();
     const [isCreatingCamp, setIsCreatingCamp] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -48,6 +49,14 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
         setRecentCampaigns(CampData);
         setRecentNotifications(NotifData);
     }, [CampData])
+
+    useEffect(() => {
+        if (dashboard) {
+            setSeeCampaigns(recentCampaigns.slice(0, 5));
+        } else {
+
+        }
+    }, [dashboard])
 
     const DeleteCampaign = (UserID: string, CampaignID: string) => {
         if (UserID.length === 32 && CampaignID.length === 10) {
@@ -259,7 +268,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                         <>
                             <div className='flex justify-between'>
                                 <div className="inter subTitle text-[var(--slate)]">
-                                    {Show === 5 ? (<>Latest Campaigns</>) : (<>All Campaigns</>)}
+                                    {dashboard ? (<>Latest Campaigns</>) : (<>All Campaigns</>)}
                                 </div>
                                 <span onClick={() => setWriteCampaign(true)}><Button name={'Add Campaigns'} href={'null'} /></span>
                             </div>
@@ -271,7 +280,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                                     <div className='pt-4 pb-4 pl-2 pr-2'>Actions</div>
                                 </div>
                                 {
-                                    recentCampaigns.map((data, index) => (
+                                    recentCampaigns.slice(0, 5).map((data, index) => (
                                         <div key={index} className="w-full grid grid-cols-3 sm:grid-cols-4 font-fira text-[var(--slate)]">
                                             <div className='pt-4 pb-4 pl-3 pr-2'>
                                                 <Link href={`/campaign/${data.selfID}`} className='text-ellipsis overflow-hidden' title={data.Name}>
@@ -297,7 +306,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
             }
 
             {
-                Show === 5 && (
+                dashboard && (
                     <>
                         <div className='flex inter subTitle text-[var(--slate)] mt-10'>
                             Latest Notifications
@@ -312,24 +321,22 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                             </div>
                             {recentNotifications &&
                                 recentNotifications.map((data, index) =>
-                                    index < Show && (
-                                        <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]" key={index}>
-                                            <div className='pt-4 pb-4 pl-3 pr-2'>
-                                                <div>{data.notifName}</div>
-                                                <div>{data.NotifType}</div>
-                                            </div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.triggerValue} Seconds</div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.displayDuration} Seconds</div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2'>
-                                                <span onClick={() => ChangeActive(data._id, !data.Active)} >
-                                                    <Toggle isEnabled={data.Active} />
-                                                </span>
-                                            </div>
-                                            <div className='pt-4 pb-4 pl-2 pr-2 text-[var(--theme-color)]'>
-                                                <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
-                                            </div>
+                                    <div className="w-full grid grid-cols-3 sm:grid-cols-5 font-fira text-[var(--slate)]" key={index}>
+                                        <div className='pt-4 pb-4 pl-3 pr-2'>
+                                            <div>{data.notifName}</div>
+                                            <div>{data.NotifType}</div>
                                         </div>
-                                    )
+                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.triggerValue} Seconds</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2 hidden sm:flex'>{data.displayDuration} Seconds</div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2'>
+                                            <span onClick={() => ChangeActive(data._id, !data.Active)} >
+                                                <Toggle isEnabled={data.Active} />
+                                            </span>
+                                        </div>
+                                        <div className='pt-4 pb-4 pl-2 pr-2 text-[var(--theme-color)]'>
+                                            <span onClick={() => DeleteNotif(data._id, data.User)} className='cursor-pointer'><FaTrash size={16} title='Delete this notification' /></span>
+                                        </div>
+                                    </div>
                                 )
                             }
                         </div>
