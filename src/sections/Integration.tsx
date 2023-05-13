@@ -27,8 +27,9 @@ const Integration = () => {
                                     ease: "easeInOut",
                                     delay: 1.2 + (index * 0.2)
                                 }}
+                                key={index}
                             >
-                                <Image src={data.src} alt={data.alt} className='integration-image' height={800} width={800} key={index} />
+                                <Image src={data.src} alt={data.alt} className='integration-image' height={800} width={800} />
                             </motion.span>
                         ))
                     }
