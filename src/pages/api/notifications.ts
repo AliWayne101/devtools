@@ -40,7 +40,10 @@ export default async function handler(
         res.status(200).json({ doc: update });
       } else if (action === "deletenotif") {
         const { user } = req.query;
-        const update = await NotifModel.deleteOne({ _id: target, User: user }).exec();
+        const update = await NotifModel.deleteOne({
+          _id: target,
+          User: user,
+        }).exec();
         res.status(200).json({ completed: true });
       } else if (action === "getsomenotifs") {
         NotifModel.find({ User: target })
@@ -51,6 +54,19 @@ export default async function handler(
           })
           .catch((err) => {
             res.status(200).json({ exists: false, error: err });
+          });
+      } else if (action === "allnotifimps") {
+        NotifModel.find({})
+          .exec()
+          .then((docs) => {
+            let totalImps = 0;
+            docs.map((doc) => {
+              totalImps += doc.Impression;
+            });
+            res.status(200).json({ totalImps: totalImps });
+          })
+          .catch((err) => {
+            res.status(200).json({ totalImps: 0 });
           });
       }
       //action statement ends above
