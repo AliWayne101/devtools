@@ -11,7 +11,6 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { BiNetworkChart } from 'react-icons/bi'
 import { MdEmail } from 'react-icons/md'
-import EmailCollector from './NotifType/EmailCollector'
 import Creator from './Creator'
 
 const Create = () => {
