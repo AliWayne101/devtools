@@ -41,6 +41,7 @@ const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
     useEffect(() => {
         switch (Tag) {
             case "EmailCollector":
+                console.log('Basic Data updated');
                 setBasicData(defaultEmailData);
                 break;
 
@@ -56,6 +57,7 @@ const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
     const renderComponent = (Tag: string) => {
         switch (Tag) {
             case "EmailCollector":
+                console.log('Basic Data triggered');
                 setMountedElement(<EC MountedData={basicData} ClosingButton={displayData.displayCloseButton} />);
                 break;
 

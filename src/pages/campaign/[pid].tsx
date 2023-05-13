@@ -42,7 +42,6 @@ const Index = ({ userDetails }: Props) => {
   useEffect(() => {
     axios.get(`/api/notifications?action=getallnotifs&target=${pid}`)
       .then((response) => {
-        console.log(response.data);
         if (response.data.exists) {
           setIsLoading(false);
           setAllNotifs(response.data.docs);
