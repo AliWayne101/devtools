@@ -248,7 +248,7 @@ const LatestCampaigns = ({ userDetails, CampData, Show, NotifData }: {
                                                     <Button name="Create" href='null' />
                                                 </span>
                                             ) : (
-                                                <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account</p>
+                                                <p className="text-red-300 mb-2">You&apos;ve reached the maximum amount of campaigns to be allowed on your account.</p>
                                             )
                                         )
                                     }
