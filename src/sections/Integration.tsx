@@ -28,7 +28,7 @@ const Integration = () => {
                                     delay: 1.2 + (index * 0.2)
                                 }}
                             >
-                                <Image src={data.src} alt={data.alt} className='integration-image' height={800} width={800} />
+                                <Image src={data.src} alt={data.alt} className='integration-image' height={800} width={800} key={index} />
                             </motion.span>
                         ))
                     }
