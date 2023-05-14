@@ -54,7 +54,6 @@ export default async function handler(
             ).exec();
           }
         }
-       
 
         const notifs = await NotifModel.find({
           CampaignID: campaignsList[0].selfID,
@@ -72,11 +71,13 @@ export default async function handler(
           let triggers = "";
           notifs.map((data) => {
             let currentBody = "";
+            let targetID = "";
             if (data.NotifType === "Email Collector") {
+              targetID = "emailCollectorBox";
               currentBody += `
-                <div class='emailCollectorBox' id='emailCollectorBox' style='background-color:${
-                  data.customizeBG
-                };' >
+                <div class='emailCollectorBox' id='${targetID}' style='background-color:${
+                data.customizeBG
+              };' >
                     <div class='dt_container_head' style='color: ${
                       data.customizeTitle
                     }'>
@@ -127,101 +128,96 @@ export default async function handler(
 
             if (data.displayPosition === "Top Left") {
               innerAnimationStarting = `
-                    let initialValue = 110;
-                    target.style['left'] = '15px';
-                    target.style['top'] =  initialValue + 'px';
+                        let initialValue = 110;
+                        target.style['left'] = '15px';
+                        target.style['top'] =  initialValue + 'px';
                     `;
 
               innerAnimationEnd = `
-                    initialValue = initialValue + 15;
-                    target.style['top'] =  initialValue + 'px';
+                        initialValue = initialValue + 15;
+                        target.style['top'] =  initialValue + 'px';
                     `;
             } else if (data.displayPosition === "Bottom Right") {
               innerAnimationStarting = `
-              target.style['right'] = '15px';
-              target.style['bottom'] =  initialValue + 'px';
+                        target.style['right'] = '15px';
+                        target.style['bottom'] =  initialValue + 'px';
               `;
 
               innerAnimationEnd = `
-              initialValue = initialValue - 15;
-              const withStyle = initialValue + 'px';
-              target.style['bottom'] =  withStyle;
+                        initialValue = initialValue - 15;
+                        const withStyle = initialValue + 'px';
+                        target.style['bottom'] =  withStyle;
               `;
             }
 
-            animation += `
-            function startShowing() {
-                let opacity = 0;
-                let initialValue = 110;
-                const _int = setInterval(() => {
-                    const target = document.getElementById('emailCollectorBox');
-                    ${innerAnimationStarting}
+            animation += `              
+                function ${targetID}() {
+                  let allowed = false;
+                  if (window.innerWidth <= 768) {
+                    allowed = ${data.triggerDisplaySmall};
+                  } else if (window.innerWidth > 768) {
+                    allowed = ${data.triggerDisplayLarge};
+                  }
 
-                    const tick = 0.2;
-                    if (opacity < 1) {
-                        opacity += tick;
-                        target.style['opacity'] = opacity;
-                        ${innerAnimationEnd}
-                    } else {
-                        clearInterval(_int);
-                    }
-                }, 50); 
-            }
-                `;
+                  if (allowed) {
+              
+                    let opacity = 0;
+                    let initialValue = 110;
+                    const _int = setInterval(() => {
+                        const target = document.getElementById('${targetID}');
+                        ${innerAnimationStarting}
+    
+                        const tick = 0.2;
+                        if (opacity < 1) {
+                            opacity += tick;
+                            target.style['opacity'] = opacity;
+                            ${innerAnimationEnd}
+                        } else {
+                            clearInterval(_int);
+                        }
+                    }, 50); 
+                  }
+                }
+            `;
 
             let writeTrigger = "";
 
             if (data.triggerType === "Delay") {
               const DeltaTime = parseInt(data.triggerValue) * 1000;
               writeTrigger += `
-                      setTimeout(() => {
-                        startShowing();
-                      }, ${DeltaTime}); `;
+                setTimeout(() => {
+                  ${targetID}();
+                }, ${DeltaTime}); `;
             } else if (data.triggerType === "Exit Intent") {
               writeTrigger += `
-                      window.addEventListener('mouseout', (event) => {
-                          if (event.clientY < 0 && !isExitIntent) {
-                            startShowing();
-                          }
-                        }); `;
+                window.addEventListener('mouseout', (event) => {
+                    if (event.clientY < 0 && !isExitIntent) {
+                      ${targetID}();
+                    }
+                  }); `;
             } else if (data.triggerType === "Mouse Hover") {
               writeTrigger += `
-                  const elements = document.querySelectorAll("${data.triggerValue}");
-                  elements.forEach((element) => {
-                      element.addEventListener("mouseenter", () => {
-                        startShowing();
-                      });
-                  }); `;
+                const elements = document.querySelectorAll("${data.triggerValue}");
+                elements.forEach((element) => {
+                    element.addEventListener("mouseenter", () => {
+                      ${targetID}();
+                    });
+                }); `;
             } else if (data.triggerType === "Mouse Click") {
               writeTrigger += `
-                      const clickk = document.querySelectorAll("${data.triggerValue}");
-                      clickk.addEventListener("click", () => {
-                        startShowing();
-                      }); `;
+                const clickk = document.querySelectorAll("${data.triggerValue}");
+                clickk.addEventListener("click", () => {
+                  ${targetID}();
+                }); `;
             } else if (data.triggerType === "Scroll Percentage") {
-              writeTrigger += `const scrollPercentage =
-                  (window.scrollY /
-                    (document.documentElement.scrollHeight -
-                      window.innerHeight)) *
-                  100;
-                  
-                  if (scrollPercentage >= ${data.triggerValue}) {
-                    startShowing();
-                  } `;
+              writeTrigger += `
+              const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+              if (scrollPercentage >= ${data.triggerValue}) {
+                ${targetID}();
+              } `;
             }
 
-            triggers += `
-              let allowed = false;
-              if (window.innerWidth <= 768) {
-                allowed = ${data.triggerDisplaySmall};
-              } else if (window.innerWidth > 768) {
-                allowed = ${data.triggerDisplayLarge};
-              }
-              
-              if (allowed) {
-                ${writeTrigger}
-              }
-              `;
+            triggers += writeTrigger;
           });
 
           const scriptStart =
