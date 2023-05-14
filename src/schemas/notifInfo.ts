@@ -9,6 +9,8 @@ export interface INotification {
   notifEPlaceholder: string;
   notifButton: string;
   notifRedirect: string;
+  notifImg1: string;
+  notifLink1: string;
   triggerType: string;
   triggerValue: string;
   triggerDisplaySmall: boolean;
@@ -42,6 +44,8 @@ const NotificationSchema = new Schema<INotification>({
   notifEPlaceholder: { type: String },
   notifButton: { type: String },
   notifRedirect: { type: String },
+  notifImg1: { type: String },
+  notifLink1: { type: String },
   triggerType: { type: String },
   triggerValue: { type: String },
   triggerDisplaySmall: { type: Boolean },

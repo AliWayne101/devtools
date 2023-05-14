@@ -38,7 +38,7 @@
 }
 
 /* Email Collector Start */
-.emailCollectorBox {
+.devToolsBox {
   opacity: 0;
   height: auto;
   width: 400px !important;

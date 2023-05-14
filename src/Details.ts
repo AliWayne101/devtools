@@ -35,6 +35,11 @@ export const generateID = (length: number) => {
   return result;
 };
 
+export interface CompProps {
+  MountedData: ICreatorData,
+  ClosingButton: boolean
+}
+
 export type ICreatorData = {
   notifName: string;
   notifTitle: string;
@@ -43,6 +48,8 @@ export type ICreatorData = {
   notifEPlaceholder: string;
   notifButton: string;
   notifRedirect: string;
+  notifImg1: string;
+  notifLink1: string;
 };
 
 export const defaultEmpty = {
@@ -53,6 +60,8 @@ export const defaultEmpty = {
   notifEPlaceholder: "",
   notifButton: "",
   notifRedirect: "",
+  notifImg1: "",
+  notifLink1: "",
 };
 
 export let defaultEmailData = {
@@ -64,6 +73,20 @@ export let defaultEmailData = {
   notifEPlaceholder: "Your email",
   notifButton: "Sign me up",
   notifRedirect: "",
+  notifImg1: "",
+  notifLink1: "",
+};
+
+export let defaultFlashData = {
+  notifName: "My new notification",
+  notifTitle: "Hot Sale!",
+  notifDesc: "Check out our discounted hot sale.",
+  notifNPlaceholder: "shopping_bag",
+  notifEPlaceholder: "",
+  notifButton: "",
+  notifRedirect: "",
+  notifImg1: `${Web.Server}/assets/dt_handbag.jpg`,
+  notifLink1: "",
 };
 
 export type notifHelp = {

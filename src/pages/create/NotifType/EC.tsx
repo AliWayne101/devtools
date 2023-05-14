@@ -1,7 +1,7 @@
-import { ICreatorData } from '@/Details'
+import { CompProps } from '@/Details'
 import React from 'react'
 
-const EC = ({ MountedData, ClosingButton }: { MountedData: ICreatorData, ClosingButton: boolean }) => {
+const EC = ({ MountedData, ClosingButton }:  CompProps) => {
   return (
     MountedData && (
       <div className="devToolsBox">

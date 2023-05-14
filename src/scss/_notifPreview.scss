@@ -1,6 +1,6 @@
 .devToolsBox {
   background-color: whitesmoke;
-  height: 240px;
+  height: auto;
   width: 400px;
   padding: 20px;
   border-radius: 10px;
@@ -59,4 +59,21 @@
 .dt_copyright {
   font-size: 12px;
   margin-top: 10px;
+}
+
+.dt_grid_30 {
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+.dt_img_box {
+  height: auto;
+  align-items: center;
+  display: flex;
+  img {
+    height: auto;
+    width: 100%;
+  }
+}
+.dt_info_box {
+  margin-left: 5px;
 }

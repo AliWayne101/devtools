@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ICreatorData, creatorProps, defaultEmailData, defaultEmpty } from '@/Details'
+import { ICreatorData, creatorProps, defaultEmailData, defaultEmpty, defaultFlashData } from '@/Details'
 import EC from './NotifType/EC';
 import { FaCog, FaMobile, FaPaintBrush } from 'react-icons/fa';
 import { TbActivity } from 'react-icons/tb';
@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import axios from 'axios';
 import Button from '@/components/Button';
 import Toggle from '@/components/Toggle';
+import Flash from './NotifType/Flash';
 
 
 const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
@@ -44,7 +45,9 @@ const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
                 console.log('Basic Data updated');
                 setBasicData(defaultEmailData);
                 break;
-
+            case "HotSales":
+                setBasicData(defaultFlashData);
+                break;
             default:
                 break;
         }
@@ -57,10 +60,11 @@ const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
     const renderComponent = (Tag: string) => {
         switch (Tag) {
             case "EmailCollector":
-                console.log('Basic Data triggered');
                 setMountedElement(<EC MountedData={basicData} ClosingButton={displayData.displayCloseButton} />);
                 break;
-
+            case "HotSales":
+                setMountedElement(<Flash MountedData={basicData} ClosingButton={displayData.displayCloseButton} />);
+                break;
             default:
                 break;
         }
@@ -200,30 +204,56 @@ const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
                                 <div>Description Message</div>
                                 <input type="text" name="notifDesc" value={basicData.notifDesc} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                             </div>
+                            {
+                                Tag === "HotSales" && (
+                                    <div className="text-[var(--slate)] font-inter mt-3">
+                                        <div>Image Link: </div>
+                                        <input type="text" name="notifImg1" value={basicData.notifImg1} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                    </div>
+                                )
+                            }
+
 
                             <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Name Placeholder</div>
+                                {
+                                    Tag === "EmailCollector" ? (
+                                        <div>Name Placeholder</div>
+                                    ) : Tag === "HotSales" ? (
+                                        <div>Image Alt</div>
+                                    ) : (
+                                        <div>Waiting</div>
+                                    )
+                                }
                                 <input type="text" name="notifNPlaceholder" value={basicData.notifNPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
                             </div>
+                            {
+                                Tag === "EmailCollector" && (
+                                    <>
+                                        <div className="text-[var(--slate)] font-inter mt-3">
+                                            <div>Email Placeholder</div>
+                                            <input type="text" name="notifEPlaceholder" value={basicData.notifEPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                        </div>
 
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Email Placeholder</div>
-                                <input type="text" name="notifEPlaceholder" value={basicData.notifEPlaceholder} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                            </div>
+                                        <div className="text-[var(--slate)] font-inter mt-3">
+                                            <div>Button Text</div>
+                                            <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                        </div>
+                                    </>
+                                )
+                            }
 
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Button Text</div>
-                                <input type="text" name="notifButton" value={basicData.notifButton} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                            </div>
-
-                            {Tag === "EmailCollector" && (
-                                <>
-                                    <div className="text-[var(--slate)] font-inter mt-3">
-                                        <div>Success Redirect (URL)</div>
-                                        <input type="text" name="notifRedirect" value={basicData.notifRedirect} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
-                                        <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
-                                    </div>
-                                </>
+                            {Tag === "EmailCollector" ? (
+                                <div className="text-[var(--slate)] font-inter mt-3">
+                                    <div>Success Redirect (URL)</div>
+                                    <input type="text" name="notifRedirect" value={basicData.notifRedirect} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                    <p className="font-small">the user will be redirected to after submitting the form. Leave empty to disable the function.</p>
+                                </div>
+                            ) : (
+                                <div className="text-[var(--slate)] font-inter mt-3">
+                                    <div>Redirect Link (URL)</div>
+                                    <input type="text" name="notifRedirect" value={basicData.notifRedirect} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateBasic(e.target)} />
+                                    <p className="font-small">the user will be redirected to after clicking onto description. Leave empty to disable the function.</p>
+                                </div>
                             )}
 
                             <div className="mt-4">
@@ -338,22 +368,29 @@ const Creator = ({ campaignID, userID, Tag, onCompleted }: creatorProps) => {
                                 <div>Background Color</div>
                                 <input type="text" name="customizeBG" value={customizeData.customizeBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
                             </div>
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Button Background Color</div>
-                                <input type="text" name="customizeButtonBG" value={customizeData.customizeButtonBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
-                            </div>
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Button Text Color</div>
-                                <input type="text" name="customizeButtonText" value={customizeData.customizeButtonText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
-                            </div>
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Input Text Color</div>
-                                <input type="text" name="customizeInputText" value={customizeData.customizeInputText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
-                            </div>
-                            <div className="text-[var(--slate)] font-inter mt-3">
-                                <div>Input Background Color</div>
-                                <input type="text" name="customizeInputBG" value={customizeData.customizeInputBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
-                            </div>
+
+                            {
+                                Tag === "EmailCollector" && (
+                                    <>
+                                        <div className="text-[var(--slate)] font-inter mt-3">
+                                            <div>Button Background Color</div>
+                                            <input type="text" name="customizeButtonBG" value={customizeData.customizeButtonBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                                        </div>
+                                        <div className="text-[var(--slate)] font-inter mt-3">
+                                            <div>Button Text Color</div>
+                                            <input type="text" name="customizeButtonText" value={customizeData.customizeButtonText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                                        </div>
+                                        <div className="text-[var(--slate)] font-inter mt-3">
+                                            <div>Input Text Color</div>
+                                            <input type="text" name="customizeInputText" value={customizeData.customizeInputText} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                                        </div>
+                                        <div className="text-[var(--slate)] font-inter mt-3">
+                                            <div>Input Background Color</div>
+                                            <input type="text" name="customizeInputBG" value={customizeData.customizeInputBG} className="font-small p-2 fira-code w-full bg-transparent border border-1 rounded rounded-[10px] mt-1" onChange={(e) => updateCustomize(e.target)} />
+                                        </div>
+                                    </>
+                                )
+                            }
                         </>
                     ) : (
                         <>

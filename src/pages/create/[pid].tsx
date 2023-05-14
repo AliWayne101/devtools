@@ -1,4 +1,3 @@
-import components, { componentIndex } from '@/NotifPreviews'
 import Button from '@/components/Button'
 import { ICampaigns } from '@/schemas/campaignInfo'
 import Footer from '@/sections/Footer'
@@ -12,6 +11,10 @@ import React, { useEffect, useState } from 'react'
 import { BiNetworkChart } from 'react-icons/bi'
 import { MdEmail } from 'react-icons/md'
 import Creator from './Creator'
+import { BsCurrencyDollar } from 'react-icons/bs'
+import EC from './NotifType/EC'
+import { defaultEmailData, defaultFlashData } from '@/Details'
+import Flash from './NotifType/Flash'
 
 const Create = () => {
     const router = useRouter();
@@ -31,15 +34,10 @@ const Create = () => {
             Description: "Easily collect emails and generate leads from your users.",
             Tag: "EmailCollector"
         }, {
-            Icon: <MdEmail size={18} className='w-full block items-center text-[var(--light-slate)]' />,
-            Title: "Email Collector",
-            Description: "Easily collect emails and generate leads from your users.",
-            Tag: "EmailCollector"
-        }, {
-            Icon: <MdEmail size={18} className='w-full block items-center text-[var(--light-slate)]' />,
-            Title: "Email Collector",
-            Description: "Easily collect emails and generate leads from your users.",
-            Tag: "EmailCollector"
+            Icon: <BsCurrencyDollar size={18} className='w-full block items-center text-[var(--light-slate)]' />,
+            Title: "Hot Sales",
+            Description: "Display any information with clickable link",
+            Tag: "HotSales"
         },
 
     ];
@@ -74,10 +72,18 @@ const Create = () => {
     }
 
     const NotificationType = (_Tag: string) => {
-        const curComp = components[componentIndex[_Tag]];
-        setSelectedComp(curComp);
-        setIsCompSelected(true);
-        setSelectedTitle(_Tag);
+        // const curComp = components[componentIndex[_Tag]];
+        if (_Tag === "EmailCollector") {
+            const component = <EC MountedData={defaultEmailData} ClosingButton={true} />
+            setSelectedComp(component);
+            setIsCompSelected(true);
+            setSelectedTitle(_Tag);
+        } else if (_Tag === "HotSales") {
+            const component = <Flash MountedData={defaultFlashData} ClosingButton={true} />
+            setSelectedComp(component);
+            setIsCompSelected(true);
+            setSelectedTitle(_Tag);
+        }
     }
 
     const NotifCreated = (status: boolean) => {

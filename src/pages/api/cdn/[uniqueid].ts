@@ -75,7 +75,7 @@ export default async function handler(
             if (data.NotifType === "Email Collector") {
               targetID = "emailCollectorBox";
               currentBody += `
-                <div class='emailCollectorBox' id='${targetID}' style='background-color:${
+                <div class='devToolsBox' id='${targetID}' style='background-color:${
                 data.customizeBG
               };' >
                     <div class='dt_container_head' style='color: ${
