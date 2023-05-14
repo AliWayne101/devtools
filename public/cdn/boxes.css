@@ -85,3 +85,29 @@
   margin-top: 10px;
 }
 /* Email Collector End */
+
+/* Flash Sale */
+.dt_grid_30 {
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.dt_img_box {
+  height: auto;
+  align-items: center;
+  display: flex;
+}
+
+.dt_img_box img {
+  height: auto;
+  width: 100%;
+}
+
+.dt_info_box {
+  margin-left: 5px;
+}
+
+a.show_none {
+  color: black;
+  text-decoration: none;
+}
